@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import "./Home.css";
 
-const Signup = () => {
+const Home = () => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -26,8 +26,8 @@ const Signup = () => {
 
     useEffect(() => {
 
-        const userPlaceholder = document.getElementById("user-login-placeholder");
-        const userInput = document.getElementById("user-login");
+        const userPlaceholder = document.getElementById("username-placeholder");
+        const userInput = document.getElementById("username");
 
         (username.length > 0) ? addPlaceholder(userPlaceholder, userInput) 
                                 : remPlaceholder(userPlaceholder, userInput);
@@ -36,8 +36,8 @@ const Signup = () => {
 
     useEffect(() => {
 
-        const passPlaceholder = document.getElementById("pass-login-placeholder");
-        const passInput = document.getElementById("pass-login");
+        const passPlaceholder = document.getElementById("password-placeholder");
+        const passInput = document.getElementById("password");
 
         (password.length > 0) ? addPlaceholder(passPlaceholder, passInput) 
                                 : remPlaceholder(passPlaceholder, passInput);
@@ -54,14 +54,14 @@ const Signup = () => {
                         <Form className="form">
                             <Form.Group className="username">
                                 <Form.Label className="wrapper w-100">
-                                    <span className="text-muted" id="user-login-placeholder">Phone number, username, or email</span>
-                                    <Form.Control type="text" id="user-login" name="username" onChange={(e) => setUsername(e.target.value)}></Form.Control>
+                                    <span className="text-muted" id="username-placeholder">Phone number, username, or email</span>
+                                    <Form.Control type="text" id="username" name="username" onChange={(e) => setUsername(e.target.value)}></Form.Control>
                                 </Form.Label>
                             </Form.Group>
                             <Form.Group className="password">
                                 <Form.Label className="wrapper w-100">
-                                    <span className="text-muted placeholder-top" id="pass-login-placeholder">Password</span>
-                                    <Form.Control type="text" id="pass-login" name="password" onChange={(e) => setPassword(e.target.value)} ></Form.Control>
+                                    <span className="text-muted placeholder-top" id="password-placeholder">Password</span>
+                                    <Form.Control type="text" id="password" name="password" onChange={(e) => setPassword(e.target.value)} ></Form.Control>
                                 </Form.Label>
                             </Form.Group>
                             <button className="submit w-100" type="submit">Log In</button>
@@ -84,4 +84,4 @@ const Signup = () => {
     )
 }
 
-export default Signup;
+export default Home;

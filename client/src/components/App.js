@@ -1,6 +1,7 @@
 import {React, useState} from "react";
 import Header from "./navbar/Header";
-import Home from "./pages/signup/Home";
+import Home from "./pages/login/Home";
+import Signup from "./pages/signup/Signup";
 
 function App() {
 
@@ -9,7 +10,7 @@ function App() {
   return (
     <div className="App">
       <Header loggedIn={loggedIn}/>
-      <Home />
+      <Signup />
     </div>
   );
 }
