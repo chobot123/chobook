@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import Tab from "./Tab";
+import Tab from "./components/Tab";
 import "./Navigation.css";
 
 const Navigation = () => {

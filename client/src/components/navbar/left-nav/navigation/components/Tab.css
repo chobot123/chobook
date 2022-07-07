@@ -1,0 +1,23 @@
+.tab {
+    font-size: 1.25rem;
+    padding: 12px;
+    border-radius: 24px;
+}
+
+.tab>.wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.tab>.wrapper>*:first-child {
+    width: 26.25px;
+    height: 26.25px;
+}
+
+.tab>.wrapper>*:last-child {
+    text-align: center;
+}
+
+.tab:hover {
+    background-color: rgba(0,0,0, 0.2);
+}

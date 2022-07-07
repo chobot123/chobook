@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
-import "./Posts.css";
 import Form from "react-bootstrap/Form";
+import "./UserPost.css";
 
-const Posts = () => {
+const UserPost = () => {
 
     const [message, setMessage] = useState("");
     const TEXT_MIN_HEIGHT = 72;
@@ -18,11 +17,9 @@ const Posts = () => {
             console.log(element.style.height);
         }
     }
-    
+
     return (
-        <Container className="posts p-0">
-            <div className="header p-card">Home</div>
-            <div className="draft">
+        <div className="userpost">
                 <div className="post-profile">
 
                 </div>
@@ -42,11 +39,7 @@ const Posts = () => {
                     </Form>
                 </div>  
             </div>
-            <div className="posts-container">
-
-            </div>
-        </Container>
     )
 }
 
-export default Posts;
+export default UserPost;
