@@ -1,6 +1,8 @@
 import {React, useState} from "react";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import Header from "./navbar/Header";
-import Home from "./pages/login/Home";
+import Home from "./pages/home/Home";
+import Login from "./pages/login/Login";
 import Signup from "./pages/signup/Signup";
 
 function App() {
@@ -9,8 +11,8 @@ function App() {
 
   return (
     <div className="App">
-      <Header loggedIn={loggedIn}/>
-      <Signup />
+      {/* <Header loggedIn={loggedIn}/> */}
+      <Home />
     </div>
   );
 }

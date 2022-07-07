@@ -3,9 +3,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import "./Home.css";
+import "./Login.css";
 
-const Home = () => {
+const Login = () => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -47,7 +47,7 @@ const Home = () => {
     return (
         <Container fluid className="h-100">
             <Row className="row h-100">
-                <Col className="logo"></Col>
+                {/* <Col className="logo"></Col> */}
                 <Col className="login d-flex justify-content-center align-items-center flex-column">
                     <Container className="form-wrapper">
                         <div className="title display-5">Chobook</div>
@@ -84,4 +84,4 @@ const Home = () => {
     )
 }
 
-export default Home;
+export default Login;

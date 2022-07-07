@@ -16,7 +16,7 @@ const Header = (props) => {
                 <Navbar.Toggle aria-controls="navbar-nav" />
                 <Navbar.Collapse id="navbar-nav" className="justify-content-end">
                     <Nav className="links">
-                        {(props.loggedIn) ? <Main /> : <Login />}
+                        <Login />
                     </Nav>
                 </Navbar.Collapse>
             </Container>

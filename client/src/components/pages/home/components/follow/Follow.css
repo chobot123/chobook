@@ -1,0 +1,45 @@
+.follow {
+    flex: 1;
+    padding: 0;
+}
+
+.follow>.header {
+    width: 350px;
+}
+
+.form-container-search {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: rgba(0,0,0, 0.05);
+    border-radius: 9999px;
+}
+
+#search {
+    border: none;
+    font-size: 15px;
+    background: transparent;
+}
+
+#clear-search {
+    position: relative;
+    color: lightgrey;
+    background-color: rgba(0,0,0, 0.7);
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    margin-left: auto;
+    margin-right: 12px;
+}
+
+#clear-search::after {
+    content: "\00D7";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#clear-search:hover {
+    background: rgba(0,0,0, 0.9);
+}

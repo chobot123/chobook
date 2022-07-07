@@ -1,0 +1,59 @@
+.posts {
+    border-right: 1px solid lightgray;
+    width: 600px !important;
+    margin: 0;
+}
+
+.header {
+    font-size: 20px;
+    font-weight: 700;
+    height: 53px;
+    display: flex;
+    align-items: center;
+}
+
+.posts>* {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.form-container>* {
+    display: flex;
+    flex-direction: column;
+}
+
+.draft {
+    padding-bottom: 12px;
+}
+
+.draft::after {
+    content: "";
+    width: 100%;
+    display: block;
+    height: 1px;
+    background-color: lightgray;
+    margin-top: 16px;
+}
+
+.form-control#my-message{
+    border: none;
+    font-size: 20px;
+    resize: none;
+    height: 72px;
+}
+
+.form-container>*>.submit {
+    margin-top: 12px;
+    display: flex;
+    align-self: flex-end;
+    align-items: center;
+    justify-content: center;
+    width: 87.97px;
+    height: 36px;
+    border: none;
+    color: white;
+    font-weight: 550;
+    background-color: lightseagreen;
+    border-radius: 9999px;
+    
+}

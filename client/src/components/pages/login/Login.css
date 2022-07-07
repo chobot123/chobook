@@ -42,7 +42,6 @@
 .login>.form-wrapper,
 .login>.signup-wrapper {
     width: 350px !important;
-    margin-left: 0;
 }
 
 .divider {
