@@ -1,21 +1,23 @@
 require("dotenv").config();
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var mongoose = require("mongoose");
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require("mongoose");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users');
+const postsRouter = require("./routes/posts");
+const messagesRouter = require("./routes/messages");
+const inboxesRouter = require("./routes/inboxes");
 
-var app = express();
+const app = express();
 
 //Mongoose connection
-var mongoDB = process.env.MONGODB_URL;
+const mongoDB = process.env.MONGODB_URL;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true});
-var db = mongoose.connection;
-db.on("error", console.log.error.bind(console, "MongoDB connection error:"));
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,8 +29,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+//routers
 app.use('/users', usersRouter);
+app.use('/inbox', inboxesRouter);
+app.use("/messages", messagesRouter);
+app.use("/posts", postsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
