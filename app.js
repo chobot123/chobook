@@ -5,6 +5,10 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require("mongoose");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const bcrypt = require("bcryptjs");
+const User = require("./models/UserSchema");
 
 const usersRouter = require('./routes/users');
 const postsRouter = require("./routes/posts");
@@ -34,6 +38,20 @@ app.use('/users', usersRouter);
 app.use('/inbox', inboxesRouter);
 app.use("/messages", messagesRouter);
 app.use("/posts", postsRouter);
+
+//passport local strategy
+
+passport.use(new LocalStrategy((username, password, done) => {
+  User.findOne(
+    {
+      "username": username,
+    },
+    (err, user) => {
+      if(err) {return done(err);}
+    }
+    if(!user) { return done(null, false, { message: "Incorrect username or password"}); }
+  )
+}))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
