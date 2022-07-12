@@ -13,8 +13,10 @@ const usersRouter = require('./routes/users');
 const postsRouter = require("./routes/posts");
 const messagesRouter = require("./routes/messages");
 const inboxesRouter = require("./routes/inboxes");
+const authRouter = require("./routes/auth");
 
 const app = express();
+app.use(express.json());
 
 //Mongoose connection
 const mongoDB = process.env.MONGODB_URL;
@@ -26,6 +28,11 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.use(logger('dev'));
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
 //session
 app.use(session(
   {
@@ -34,22 +41,17 @@ app.use(session(
     saveUninitialized: true,
   }
 ))
-app.use(passport.initialize());
-app.use(passport.session());
 //passport local strategy
 require("./helpers/localStrategy")(passport);
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //routers
-app.use('/users', usersRouter);
-app.use('/inbox', inboxesRouter);
-app.use("/messages", messagesRouter);
-app.use("/posts", postsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/inbox', inboxesRouter);
+app.use("/api/messages", messagesRouter);
+app.use("/api/posts", postsRouter);
+app.use("/api/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

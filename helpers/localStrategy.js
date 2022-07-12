@@ -10,13 +10,15 @@ module.exports = (passport) => {
                 username: username,
             },
             (err, user) => {
-                if(er) {return done(err);}
+
+                if(err) {return done(err);}
                 if(!user) { return done(null, false, { message: "Incorrect username or password" })}
     
                 bcrypt.compare(password, user.password, (err, success) => {
-                    if(success) { return cb(null, error);}
+
+                    if(success) { return done(null, user);}
                     else {
-                        return cb(null, false, { message: "Incorrect username or password" })
+                        return done(null, false, { message: "Incorrect username or password" })
                     }
                 })
             }

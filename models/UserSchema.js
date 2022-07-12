@@ -8,6 +8,7 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         trim: true,
+        unique: true,
     },
 
     password: {
@@ -18,26 +19,17 @@ const UserSchema = new Schema({
 
     firstName: {
         type: String,
-        required: true,
         trim: true,
     },
 
     lastName: {
         type: String,
-        required: true,
         trim: true
-    },
-
-    screenName: {
-        type: String, 
-        required: true,
-        trim: true,
-        unique: true,
     },
 
     description: {
         type: String,
-        default: null,
+        default: "",
         trim: true,
     },
 
