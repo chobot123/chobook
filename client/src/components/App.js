@@ -1,18 +1,20 @@
 import {React, useState} from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "./pages/home/Home";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/auth/login/Login";
 import "./App.css";
+import Signup from "./pages/auth/signup/Signup";
 
 function App() {
 
-  const [isLoggedIn, setisLoggedIn] = useState(true);
+  const [user, setUser] = useState({});
 
   return (
     <div className="App">
       <div className="main">
         <Routes>
-          <Route index element={<Home />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </div>
     </div>

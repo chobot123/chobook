@@ -1,0 +1,61 @@
+.auth.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth.container>.wrapper {
+    border-radius: 24px;
+    box-shadow: 0px 0px 10px 5px #0000001a;
+}
+
+.auth.header {
+    text-align: center;
+}
+
+.auth.label {
+    margin-bottom: 0.25rem;
+}
+
+.auth.form-control:focus {
+    box-shadow: 0px 0px 4px 0px #86b7fe;
+}
+
+.auth.submit {
+    font-weight: 700;
+    font-size: large;
+}
+
+.auth>ul {
+    width: 100%;
+}
+
+.auth.error-message {
+    display: flex;
+    gap: 0.5rem;
+    color: red;
+    font-size: small;
+}
+
+.auth.checklist-description {
+    font-size: small;
+    font-style: italic;
+}
+
+.auth.error {
+    margin-left: 0.5rem;
+    font-size: smaller;
+}
+
+.auth.redirect>.message {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    font-size: smaller;
+}
+
+.auth.link {
+    text-decoration: none;
+}
+
