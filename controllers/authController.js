@@ -13,7 +13,6 @@ exports.login_post = [
     body("password").trim().escape(),
 
     (req, res, next) => {
-
         passport.authenticate("local", {session: false}, (err, user) => {
 
             if(err) {next(err);}
@@ -44,16 +43,12 @@ exports.signup = [
     body("firstName").trim().escape(),
     body("lastName").trim().escape(),
     body("username").trim().escape(),
-    body("password").trim().isStrongPassword().escape()
-        .withMessage(["Atleast 8 Characters", 
-                        "A Lowercase Letter", 
-                        "An Uppercase Letter", 
-                        "A Number", 
-                        "A Symbol (@, !, $, etc)"]),
+    body("password").trim().isStrongPassword().escape(),
     
     async (req, res, next) => {
         
         const errors = validationResult(req);
+        console.log(errors);
 
         const user = await User.findOne({username: req.body.username});
 
@@ -63,7 +58,7 @@ exports.signup = [
                 return res.status(401).send(
                     {
                         success: false,
-                        message: "Username already exists"
+                        message: "Username already exists."
                     }
                 )
             } else {
@@ -71,7 +66,7 @@ exports.signup = [
                 return res.status(401).send(
                     {
                         success: false,
-                        message: errors.array(),
+                        message: "Invalid Password. Try again.",
                     }
                 )
             }
@@ -94,7 +89,7 @@ exports.signup = [
                     if(err) { return next(err);}
                     return res.status(200).send({
                         success: true,
-                        user: user,
+                        message: "New user created"
                     })
                 })
             })
