@@ -1,0 +1,12 @@
+.auth.header {
+    text-align: center;
+}
+
+.auth.form-control:focus {
+    box-shadow: 0px 0px 4px 0px #86b7fe;
+}
+
+.auth.submit {
+    font-weight: 700;
+    font-size: large;
+}
