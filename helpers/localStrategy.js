@@ -30,10 +30,7 @@ module.exports = (passport) => {
     })
 
     passport.deserializeUser((userId, done) => {
-        User.findById(
-            {
-                _id: userId,
-            },
+        User.findById(userId,
             (err, user) => {
                 done(err, user);
             }

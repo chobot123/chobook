@@ -6,6 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const checkAuth = require("./helpers/checkAuth").checkAuth;
 
@@ -39,18 +40,21 @@ app.use(session(
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
+    store: MongoStore.create({ 
+      mongoUrl: mongoDB,
+    })
   }
 ))
-//passport local strategy
-require("./helpers/localStrategy")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+//passport local strategy
+require("./helpers/localStrategy")(passport);
 
 //routers
 app.use('/api/users', usersRouter);
 app.use('/api/inbox', inboxesRouter);
 app.use("/api/messages", messagesRouter);
-app.use("/api/posts", postsRouter);
+app.use("/api/posts", checkAuth, postsRouter);
 app.use("/api/auth", authRouter);
 
 // catch 404 and forward to error handler

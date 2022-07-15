@@ -41,7 +41,25 @@ const PostSchema = new Schema({
         },
     },
     
-    { timestamps: true,}
+    { 
+        timestamps: true,
+        toJSON: {virtuals: true },
+        toObject: {virtuals: true}
+    }
 );
+
+PostSchema.virtual("numLikes").get(function(){
+    return this.likes.length;
+});
+
+PostSchema.virtual("numShares").get(function(){
+    return this.sharedBy.length;
+})
+
+PostSchema.virtual("numReplies").get(function(){
+    return this.replies.length;
+})
+
+
 
 module.exports = mongoose.model("Post", PostSchema);
