@@ -47,6 +47,20 @@ const UserSchema = new Schema({
         },
     ],
 
+    likedPosts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Post",
+        }
+    ],
+
+    sharedPosts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Post",
+        }
+    ],
+
 });
 
 module.exports = mongoose.model("User", UserSchema);

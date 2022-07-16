@@ -1,5 +1,6 @@
 const { body, validationResult } = require("express-validator");
 const Post = require("../models/PostSchema");
+const User = require("../models/UserSchema");
 
 
 //gets posts of the user
@@ -30,21 +31,41 @@ exports.posts = (req, res, next) => {
 
 //get single post
 exports.post_get = (req, res, next) => {
-    console.log(req.params.id);
-    Post.findById(req.params.id)
-    .populate("author")
+    const post_id = req.params.id;
+    let userHasLiked = false;
+    let userHasShared = false;
+    
+    User.findOne({likedPosts: post_id}, (err, result) => {
+        if(err) { console.log(err);}
+        if(result !== null) {
+            userHasLiked = true;
+        }
+    })
+
+    User.findOne({sharedPosts: post_id}, (err, result) => {
+        if(err) {console.log(err);}
+        if(result !== null){
+            userHasShared = true;
+        }
+    })
+
+    Post.findById(post_id)
+    .populate("author", "firstName lastName username")
     .populate("content")
     .populate("likes")
     .populate("replies")
     .populate("replyTo")
     .exec((err, thisPost) => {
         if(err){return next(err);}
-        return res.status(200).send(
-            {
-                success: true,
-                post: thisPost,
+
+        return res.status(200).send({
+            success: true,
+            post: thisPost,
+            currentUser: {
+                userLiked: userHasLiked,
+                userShared: userHasShared,
             }
-        )
+        })
     })
 }
 
@@ -95,4 +116,54 @@ exports.post_delete = (req, res, next) => {
                 }
             )
         })
+}
+
+//like a post
+exports.likePost = async (req, res, next) => {
+
+    const user = await User.findByIdAndUpdate(req.user,
+        {
+            $addToSet: {likedPosts: req.params.id},
+        }, {new: true}
+    ).catch((err) => {return next(err)});
+
+    const post = await Post.findByIdAndUpdate(req.params.id, 
+        {
+            $addToSet: {likes: req.user.id },
+        }, {new: true}
+    ).catch((err) => {return next(err)});
+
+    return res.status(200).send(
+        {
+            success: true,
+            userHasLiked: true,
+        }
+    )
+}
+
+//dislike a post
+exports.dislikePost = async (req, res, next) => {
+    
+    const user = await User.findByIdAndUpdate(req.user,
+        {
+            $pull: {likedPosts: req.params.id},
+        }, {new: true}
+    ).catch((err) => {return next(err)});
+
+    const post = await Post.findByIdAndUpdate(req.params.id, 
+        {
+            $pull: {likes: req.user.id },
+        }, {new: true}
+    ).catch((err, result) => {
+        return next(err)
+    });
+
+    return res.status(200).send(
+        {
+            success: true,
+            userHasLiked: false,
+            user,
+            post
+        }
+    )
 }

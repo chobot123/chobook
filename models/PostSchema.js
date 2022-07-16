@@ -60,6 +60,4 @@ PostSchema.virtual("numReplies").get(function(){
     return this.replies.length;
 })
 
-
-
 module.exports = mongoose.model("Post", PostSchema);
