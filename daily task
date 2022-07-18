@@ -3,3 +3,5 @@ Created: 7/11/2022 5:02PM
 Tasks for: 7/12/2022
 -> Create Logout endpoint X
 -> Transition to user CRUD 
+
+fix the client post states

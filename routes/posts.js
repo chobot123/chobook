@@ -15,4 +15,8 @@ router.put("/update/like/:id", postController.likePost)
 
 router.put("/update/dislike/:id", postController.dislikePost)
 
+router.put("/update/share/:id", postController.sharePost)
+
+router.put("/update/unshare/:id", postController.unsharePost)
+
 module.exports = router;

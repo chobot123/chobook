@@ -23,6 +23,7 @@
 
 .post.react {
     display: flex;
+    font-size: 22px;
     justify-content: space-evenly;
 }
 
@@ -33,24 +34,25 @@
 .react-wrapper {
     position: relative;
     border-radius: 50%;
-    width: 30.5px;
-    height: 30.5px;
+    width: 38.5px;
+    height: 38.5px;
+    font-size: 22.5px !important;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .react-wrapper:first-of-type:hover{
-    color: rgb(68, 0, 0);
+    color: rgb(236, 0, 91);
     background-color: rgb(253, 235, 235);
 }
 
 .react-wrapper:nth-of-type(2):hover{
-    color: rgb(0, 124, 108);
+    color: rgb(81, 104, 211);
     background-color: rgb(235, 255, 255);
 }
 
 .react-wrapper:last-of-type:hover{
-    color: rgb(0, 61, 41);
-    background-color: rgb(234, 250, 233);
+    color: rgb(14, 94, 0);
+    background-color: rgb(244 247 243);
 }

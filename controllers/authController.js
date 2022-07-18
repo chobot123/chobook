@@ -108,3 +108,8 @@ exports.logout = (req, res, next) => {
         )
     });
 }
+
+exports.checkSession = (req, res, next) => {
+    console.log(req.session);
+    next();
+}

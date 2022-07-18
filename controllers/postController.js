@@ -121,10 +121,10 @@ exports.post_delete = (req, res, next) => {
 //like a post
 exports.likePost = async (req, res, next) => {
 
-    const user = await User.findByIdAndUpdate(req.user,
+    User.findByIdAndUpdate(req.user,
         {
             $addToSet: {likedPosts: req.params.id},
-        }, {new: true}
+        },
     ).catch((err) => {return next(err)});
 
     const post = await Post.findByIdAndUpdate(req.params.id, 
@@ -136,7 +136,10 @@ exports.likePost = async (req, res, next) => {
     return res.status(200).send(
         {
             success: true,
-            userHasLiked: true,
+            post: post,
+            currentUser: {
+                userLiked: true,
+            }
         }
     )
 }
@@ -144,26 +147,81 @@ exports.likePost = async (req, res, next) => {
 //dislike a post
 exports.dislikePost = async (req, res, next) => {
     
-    const user = await User.findByIdAndUpdate(req.user,
+    User.findByIdAndUpdate(req.user,
         {
             $pull: {likedPosts: req.params.id},
-        }, {new: true}
+        },
     ).catch((err) => {return next(err)});
 
     const post = await Post.findByIdAndUpdate(req.params.id, 
         {
             $pull: {likes: req.user.id },
         }, {new: true}
-    ).catch((err, result) => {
+    ).catch((err) => {
         return next(err)
     });
 
     return res.status(200).send(
         {
             success: true,
-            userHasLiked: false,
-            user,
-            post
+            post: post,
+            currentUser: {
+                userLiked: false,
+            }
+        }
+    )
+}
+
+//share a post
+exports.sharePost = async (req, res, next) => {
+
+    User.findByIdAndUpdate(req.user,
+        {
+            $addToSet: {sharedPosts: req.params.id},
+        },
+    ).catch((err) => {return next(err)});
+
+    const post = await Post.findByIdAndUpdate(req.params.id, 
+        {
+            $addToSet: {sharedBy: req.user.id },
+        }, {new: true}
+    ).catch((err) => {return next(err)});
+
+    return res.status(200).send(
+        {
+            success: true,
+            post: post,
+            currentUser: {
+                userShared: true,
+            }
+        }
+    )
+}
+
+//unshare a post
+exports.unsharePost = async (req, res, next) => {
+    
+    User.findByIdAndUpdate(req.user,
+        {
+            $pull: {sharedPosts: req.params.id},
+        },
+    ).catch((err) => {return next(err)});
+
+    const post = await Post.findByIdAndUpdate(req.params.id, 
+        {
+            $pull: {sharedBy: req.user.id },
+        }, {new: true}
+    ).catch((err) => {
+        return next(err)
+    });
+
+    return res.status(200).send(
+        {
+            success: true,
+            post: post,
+            currentUser: {
+                userShared: false,
+            }
         }
     )
 }
