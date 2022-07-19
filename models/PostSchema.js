@@ -39,6 +39,13 @@ const PostSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "Post",
         },
+
+        replyChain: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Post",
+            }  
+        ]
     },
     
     { 
@@ -61,31 +68,31 @@ PostSchema.virtual("numReplies").get(function(){
 })
 
 deleteReferences = function(next){
-    //delete author (User), delete likes (user), delete sharedBy(User),
-    //delete replies(post), delete replyTo(post)
+
     this.model("User").updateMany({likedPosts: this._id}, {
         $pull: {likedPosts: this._id}
     }, (err) => {
         if(err) {next(err);}
         console.log("Successfully removed post from User (LikedPosts)")
     });
+
     this.model("User").updateMany({sharedPosts: this._id}, {
         $pull: {sharedPosts: this._id}
     }, (err) => {
         if(err) {next(err);}
         console.log("Successfully removed post from User (SharedPosts)")
     });
+
     this.model("Post").updateMany({replies: this._id}, {
         $pull: {replies: this._id}
     }, (err) => {
         if(err) {next(err);}
         console.log("Successfully removed post from Post (ReplyTo)")
     });
-    this.model("Post").updateMany({replyTo: this._id}, {
-        $pull: {replyTo: this._id}
-    }, (err) => {
+
+    this.model("Post").deleteMany({replyChain: this._id}, (err) => {
         if(err) {next(err);}
-        console.log("Successfully removed post from Post (ReplyTo)")
+        console.log("Successfully removed post from Post (Reply Chain)")
     });
     next();
 }

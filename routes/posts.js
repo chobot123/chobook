@@ -19,4 +19,6 @@ router.put("/update/share/:id", postController.sharePost)
 
 router.put("/update/unshare/:id", postController.unsharePost)
 
+router.put("/update/refresh/:id", postController.refresh)
+
 module.exports = router;

@@ -64,6 +64,7 @@ exports.post_get = (req, res, next) => {
             currentUser: {
                 userLiked: userHasLiked,
                 userShared: userHasShared,
+
             }
         })
     })
@@ -73,8 +74,8 @@ exports.post_get = (req, res, next) => {
 exports.post_create = [
     body("content").trim().isLength({min: 1}),
 
-    (req, res, next) => {
-        console.log("reply to post: " + req.body.replyTo);
+    async (req, res, next) => {
+
         const errors = validationResult(req);
 
         if(!errors.isEmpty()){
@@ -85,11 +86,26 @@ exports.post_create = [
                 }
             )
         }else {
+            let replyChain = [];
+            if(req.body.replyTo){
+                replyTo = req.body.replyTo;
+                replyChain = await Post.findById(req.body.replyTo);
+                replyChain = replyChain.replyChain;
+                
+            }
+
             let post = new Post({
                 author: req.user._id,
                 content: req.body.content,
-                replyTo: (req.body.replyTo !== "undefined") ? req.body.replyTo : [],
             });
+
+            if(req.body.replyTo){
+
+                let replyToPost = await Post.findById(req.body.replyTo);
+                replyChain = replyChain;
+                post.replyChain = replyToPost.replyChain;
+                post.replyChain.push(req.body.replyTo);
+            }
 
             post.save((err, thisPost) => {
                 if(err) {return next(err);}
@@ -235,4 +251,11 @@ exports.unsharePost = async (req, res, next) => {
             }
         }
     )
+}
+
+exports.refresh = async (req, res, next) => {
+    
+    let post = await Post.findById(req.params.id);
+    post.populate("replyTo");
+    return res.send(post);
 }
