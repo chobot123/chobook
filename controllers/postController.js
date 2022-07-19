@@ -74,6 +74,7 @@ exports.post_create = [
     body("content").trim().isLength({min: 1}),
 
     (req, res, next) => {
+        console.log("reply to post: " + req.body.replyTo);
         const errors = validationResult(req);
 
         if(!errors.isEmpty()){
@@ -87,12 +88,21 @@ exports.post_create = [
             let post = new Post({
                 author: req.user._id,
                 content: req.body.content,
-            })
+                replyTo: (req.body.replyTo !== "undefined") ? req.body.replyTo : [],
+            });
 
             post.save((err, thisPost) => {
                 if(err) {return next(err);}
                 
-                console.log(thisPost);
+                console.log("this post" + thisPost);
+                if(req.body.replyTo !== "undefined") {
+                    //update replies of replyTo post
+                    Post.findByIdAndUpdate(req.body.replyTo,
+                        {
+                            $addToSet: {replies: thisPost._id}
+                        }
+                    ).catch((err) => console.log(err))
+                }
                 return res.status(200).send(
                     {
                         success: true,
@@ -107,8 +117,9 @@ exports.post_create = [
 //delete a post
 exports.post_delete = (req, res, next) => {
     Post.findByIdAndDelete(req.params.id)
-        .exec((err) => {
+        .exec((err, doc) => {
             if(err) {return next(err);}
+            doc.deleteOne();
             return res.status(200).send(
                 {
                     success: true,

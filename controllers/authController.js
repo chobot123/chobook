@@ -110,6 +110,16 @@ exports.logout = (req, res, next) => {
 }
 
 exports.checkSession = (req, res, next) => {
-    console.log(req.session);
-    next();
+    if(req.session){
+        return res.status(200).send(
+            {
+                success: true,
+            }
+        )
+    }
+    return res.status(402).send(
+        {
+            success: false,
+        }
+    )
 }

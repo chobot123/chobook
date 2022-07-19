@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./Post.css";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TbHeart, TbBrandHipchat, TbRepeat } from "react-icons/tb";
+import { Button, Form, Image } from "react-bootstrap";
+import image from "./placeholder.jpg";
 
 const Post = () => {
 
@@ -132,18 +134,35 @@ const Post = () => {
 
     return (
         <div className="post container">
-            <div className="post author">
-                <div className="post fullName">{fullName}</div>
-                <div className="post username text-muted">{username}</div>
+            <div className="post author d-flex align-items-center">
+                <Image src={image} alt="profile picture"  
+                    roundedCircle="true"
+                    style={
+                        {
+                            height: "48px",
+                            width: "48px",
+                        }
+                    }
+                />
+                <div className="post author-info">
+                    <div className="post fullName">{fullName}</div>
+                    <div className="post username text-muted"
+                        style={
+                            {
+                                lineHeight: 1,
+                            }
+                        }
+                    >@{username}</div>
+                </div>
             </div>
             <div className="post content">{content}</div>
             <div className="post timestamp"></div>
-            <div className="post status">
+            <div className="post status bt pt-2 pb-2">
                 <div className="post #likes">{likeCount} Likes</div>
                 <div className="post #shares">{sharesCount} Shares</div>
                 <div className="post #replies">{replyCount} Replies</div>
             </div>
-            <div className="post react">
+            <div className="post react bt bb">
                 <div className="react-wrapper like" onClick={(e) => handleLike(e)}>
                     {(userLiked) ? <AiFillHeart style={ {color: "rgb(236, 0, 91)"}}/> : <AiOutlineHeart />}
                 </div>
@@ -154,7 +173,18 @@ const Post = () => {
                     <TbRepeat style={ { color: (userShared) ? "rgb(14, 94, 0)" : ""}}/>
                 </div>
             </div>
-            <div className="replies-container"></div>
+            <div className="replies-container">
+
+            </div>
+            <div className="p-mod">
+                <Form className="post create">
+                    <Form.Group className="post content">
+                        <Form.Control type="text" placeholder="Add another Post" />
+                    </Form.Group>
+
+                    <Button className="post submit" variant="primary" type="submit">Post</Button>
+                </Form>
+            </div>
         </div>
     )
 }
