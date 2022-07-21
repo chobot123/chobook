@@ -14,11 +14,6 @@ const MessageSchema = new Schema({
         trim: true,
     },
 
-    sentTo: {
-        type: Schema.Types.ObjectId,
-        ref: "Inbox",
-    },
-
     inbox: {
         type: Schema.Types.ObjectId,
         ref: "Inbox",
@@ -33,4 +28,4 @@ const MessageSchema = new Schema({
 
 });
 
-module.exports = mongoose.Schema("Message", MessageSchema);
+module.exports = mongoose.model("Message", MessageSchema);

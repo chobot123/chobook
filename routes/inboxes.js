@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const inboxController = require("../controllers/inboxController");
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.post("/")
 
 module.exports = router;

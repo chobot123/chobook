@@ -23,4 +23,4 @@ const InboxSchema = new Schema({
 
 })
 
-module.exports = mongoose.Model("Inbox", InboxSchema);
+module.exports = mongoose.model("Inbox", InboxSchema);

@@ -87,12 +87,6 @@ exports.post_create = [
             )
         }else {
             let replyChain = [];
-            if(req.body.replyTo){
-                replyTo = req.body.replyTo;
-                replyChain = await Post.findById(req.body.replyTo);
-                replyChain = replyChain.replyChain;
-                
-            }
 
             let post = new Post({
                 author: req.user._id,
@@ -102,7 +96,6 @@ exports.post_create = [
             if(req.body.replyTo){
 
                 let replyToPost = await Post.findById(req.body.replyTo);
-                replyChain = replyChain;
                 post.replyChain = replyToPost.replyChain;
                 post.replyChain.push(req.body.replyTo);
             }
