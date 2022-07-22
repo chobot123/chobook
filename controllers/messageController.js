@@ -3,6 +3,7 @@ const Message = require("../models/MessageSchema");
 const Inbox = require("../models/InboxSchema");
 
 exports.message_create = [
+    
     body("content").trim().isLength({min: 1}),
 
     async (req, res, next) => {
