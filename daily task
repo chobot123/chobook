@@ -4,4 +4,6 @@ Tasks for: 7/12/2022
 -> Create Logout endpoint X
 -> Transition to user CRUD 
 
-fix the client post states
+Make 2 Post Templates:
+    1) For basic post X
+    2) modal

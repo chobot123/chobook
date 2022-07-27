@@ -5,14 +5,25 @@ const User = require("../models/UserSchema");
 
 //gets posts of the user
 exports.posts = (req, res, next) => {
+
     let currentUser;
     if((typeof req.body.user) !== "undefined"){
         currentUser = req.body.user; 
     }else{
         currentUser = req.user; //session user
     }
-    Post.find({author: currentUser.id})
+    Post.find(
+        {
+            $or:  [
+                {
+                    author: req.user,
+                    followers: req.user, 
+                }
+            ]
+        }
+    )
     .sort({createdAt: -1,})
+    .populate("author")
     .populate("content")
     .populate("replyTo")
     .exec((err, posts) => {
@@ -72,6 +83,7 @@ exports.post_get = (req, res, next) => {
 
 //create a post
 exports.post_create = [
+    //REQ.BODY.PARENT
     body("content").trim().isLength({min: 1}),
 
     async (req, res, next) => {
@@ -86,7 +98,6 @@ exports.post_create = [
                 }
             )
         }else {
-            let replyChain = [];
 
             let post = new Post({
                 author: req.user._id,
@@ -95,23 +106,18 @@ exports.post_create = [
 
             if(req.body.replyTo){
 
-                let replyToPost = await Post.findById(req.body.replyTo);
-                post.replyChain = replyToPost.replyChain;
-                post.replyChain.push(req.body.replyTo);
+                Post.findOneAndUpdate(req.body.parent, {
+                    $addToSet: {replies: post}
+                }, {new: true}, (err, result) => {
+                    if(err) {return next(err)}
+
+                    post.replyChain = result.replyChain;
+                    post.replyChain.push(req.body.parent);
+                })
             }
 
             post.save((err, thisPost) => {
                 if(err) {return next(err);}
-                
-                console.log("this post" + thisPost);
-                if(req.body.replyTo !== "undefined") {
-                    //update replies of replyTo post
-                    Post.findByIdAndUpdate(req.body.replyTo,
-                        {
-                            $addToSet: {replies: thisPost._id}
-                        }
-                    ).catch((err) => console.log(err))
-                }
                 return res.status(200).send(
                     {
                         success: true,

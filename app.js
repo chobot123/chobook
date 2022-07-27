@@ -52,9 +52,9 @@ app.use(passport.session());
 require("./helpers/localStrategy")(passport);
 
 //routers
-app.use('/api/users', usersRouter);
-app.use('/api/inbox', inboxesRouter);
-app.use("/api/messages", messagesRouter);
+app.use('/api/users', checkAuth, usersRouter);
+app.use('/api/inbox', checkAuth, inboxesRouter);
+app.use("/api/messages", checkAuth, messagesRouter);
 app.use("/api/posts", checkAuth, postsRouter);
 app.use("/api/auth", authRouter);
 
