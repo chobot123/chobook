@@ -1,8 +1,25 @@
 .App>.main {
     height: 100%;
+    overflow-x: hidden;
+}
+
+.content.container {
+    height: 100%;
 }
 
 ul {
     list-style-type: none;
     padding: 0;
+}
+
+.side-nav {
+    border-left: 1px solid rgb(243, 243, 243);
+}
+
+.leftbar {
+    position: relative;
+}
+
+.wrapper {
+    margin-top: 2rem;
 }

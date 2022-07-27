@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../auth/auth.css";
 import "./Login.css";
 
-const Login = () => {
+const Login = (props) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -32,6 +32,7 @@ const Login = () => {
             response.json()
                 .then((data) => {
                     if(data.success) {
+                        props.verified(data.success);
                         navigate("/home");
                     }else{
                         setLoginStatus(data.success);
@@ -45,11 +46,6 @@ const Login = () => {
         })
         
     }
-
-    useEffect(() => {
-        console.log(loginStatus);
-        console.log(message);
-    }, [loginStatus, message])
 
     return (
         <Container className="auth login pb-5">

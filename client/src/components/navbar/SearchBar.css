@@ -1,0 +1,74 @@
+.search-container>.form-control {
+    box-shadow: none;
+    transition: none;
+    padding-left: 0;
+}
+
+#search-icon {
+    border-right: none;
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
+}
+
+.search-container>.form-control {
+    border-left: none;
+    border-radius: 24px;
+}
+
+.search-container>.form-control:focus{
+    background-color: white !important;
+}
+
+.search-container>#search-icon,
+.search-container>.form-control {
+    background-color: rgb(233, 241, 241);
+    border-color: rgb(233, 241, 241);
+}
+
+.user {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.suggestions>.user {
+    display: inline-flex;
+    justify-content: flex-start;
+}
+
+.who-to-follow {
+    background-color: rgb(233, 241, 241);
+    border-radius: 12px;
+}
+
+.suggestions>.user>.profile {
+    gap: 0.5rem;
+}
+
+.title {
+    font-weight: bolder;
+}
+
+.user>.follow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 24px;
+}
+
+.connect {
+    text-decoration: none;
+}
+
+.info {
+    min-width: 0;
+}
+
+.info>.name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.user>.profile {
+    min-width: 0;
+}

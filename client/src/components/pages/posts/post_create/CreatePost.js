@@ -1,11 +1,14 @@
-import React from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Container, Form, Image } from "react-bootstrap";
 import image from "./placeholder.jpg";
+import "./CreatePost.css";
+import { TbInfoSquare } from "react-icons/tb";
 
 const CreatePost = (props) => {
     const [content, setContent] = useState("");
+    let rows = 1;
 
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         fetch("/api/posts/", 
@@ -29,8 +32,15 @@ const CreatePost = (props) => {
         }).catch(err => console.log(err))
     }
 
+    const autoResizeText = (e) => {
+
+        e.target.style.height = "auto";
+        e.target.style.height = e.target.scrollHeight + "px";
+
+    }
+
     return (
-        <Container className="create-post">
+        <Container className="create-post p-1">
             <div className="profile-pic">
                 <Image src={image} alt="profile picture"  
                     roundedCircle="true"
@@ -42,10 +52,16 @@ const CreatePost = (props) => {
                     }
                 />
             </div>
-            <div className="post-form">
+            <div className="post-form w-100">
                 <Form>
                     <Form.Group className="post content">
-                        <Form.Control type="text" placeholder="What's Happening?" onChange={(e) => setContent(e.target.value)}/>
+                        <Form.Control 
+                            as="textarea"
+                            rows="1"
+                            placeholder="What's Happening?" 
+                            onInput={(e) => autoResizeText(e)}
+                            onChange={(e) => setContent(e.target.value)}
+                        />
                     </Form.Group>
 
                     <Button className="post submit" variant="primary" type="submit">Post</Button>

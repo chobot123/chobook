@@ -179,7 +179,7 @@ const Post = () => {
             <div className="p-mod">
                 <Form className="post create">
                     <Form.Group className="post content">
-                        <Form.Control type="text" placeholder="Add another Post" />
+                        <Form.Control as="textarea" placeholder="Add another Post" />
                     </Form.Group>
 
                     <Button className="post submit" variant="primary" type="submit">Post</Button>
