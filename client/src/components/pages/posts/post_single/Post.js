@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Post.css";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { TbHeart, TbBrandHipchat, TbRepeat } from "react-icons/tb";
+import { TbBrandHipchat, TbRepeat } from "react-icons/tb";
 import { Button, Form, Image } from "react-bootstrap";
 import image from "./placeholder.jpg";
 

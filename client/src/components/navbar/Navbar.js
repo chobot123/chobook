@@ -29,35 +29,39 @@ const NavigationBar = () => {
         .catch(err => console.log(err))
     }
 
+    const handleNavigate = (url) => {
+        navigate(url);
+    }
+
     return (
-        <div className="navigation h-100">
+        <Container className="navigation h-100 d-flex">
             <div className="wrapper">
-                <div className="logo">
+                <div className="logo" onClick={() => handleNavigate("/home")}>
                     <div className="img-nav"><RiBearSmileLine /></div>
                 </div>
-                <div className="home">
+                <div className="home" onClick={() => handleNavigate("/home")}>
                     <div className="img-nav"><RiHome7Fill alt="home icon"/></div> 
-                    <Link to="home" className="navbar-link">Home</Link>
+                    <div className="navbar-link d-none d-xl-block">Home</div>
                 </div>
-                <div className="messages">
+                <div className="messages" onClick={() => handleNavigate("/messages")}>
                     <div className="img-nav"><RiMailFill alt="messages icon"/></div> 
-                    <Link to="messages" className="navbar-link">Messages</Link>
+                    <div  className="navbar-link d-none d-xl-block">Messages</div>
                 </div>
-                <div className="profile">
+                <div className="profile" onClick={() => handleNavigate("/profile")}>
                     <div className="img-nav"><RiUser3Fill alt="profile icon"/></div> 
-                    <Link to="profile" className="navbar-link">Profile</Link>
+                    <div  className="navbar-link d-none d-xl-block">Profile</div>
                 </div>
-                <div className="notifications">
+                <div className="notifications" onClick={() => handleNavigate("/notications")}>
                     <div className="img-nav"><RiBellFill alt="notifications icon"/></div> 
-                    <Link to="notications" className="navbar-link">Notifications</Link>
+                    <div  className="navbar-link d-none d-xl-block">Notifications</div>
                 </div>
-                <div className="logout">
+                <div className="logout" onClick={() => handleLogout("/logout")}>
                     <div className="img-nav"><RiDoorOpenFill alt="logout icon"/></div> 
-                    <Link to="logout" className="navbar-link">Log Out</Link>
+                    <div className="navbar-link d-none d-xl-block">Log Out</div>
                 </div>
             </div>
             
-        </div>
+        </Container>
     )
 }
 

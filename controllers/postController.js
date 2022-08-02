@@ -3,25 +3,91 @@ const Post = require("../models/PostSchema");
 const User = require("../models/UserSchema");
 
 
-//gets posts of the user
+//gets posts of the current user
 exports.posts = (req, res, next) => {
 
-    let currentUser;
-    if((typeof req.body.user) !== "undefined"){
-        currentUser = req.body.user; 
-    }else{
-        currentUser = req.user; //session user
-    }
-    Post.find(
-        {
-            $or:  [
+    Post.find({author: req.user})
+    .sort({createdAt: -1,})
+    .populate("author")
+    .populate("content")
+    .populate("replyTo")
+    .exec((err, posts) => {
+        if(err) {
+            return next(err);
+        }else {
+            return res.status(200).send(
                 {
-                    author: req.user,
-                    followers: req.user, 
+                    success: true,
+                    posts: posts,
                 }
-            ]
+            )
         }
-    )
+    })
+}
+
+exports.getPosts = (req, res, next) => {
+    const username = req.params.username;
+
+    User.findOne({username: username})
+    .exec((err, user) => {
+        if(err){
+            return next(err);
+        }else {
+            if(user) {
+                Post.find({author: user})
+                .sort({createdAt: -1,})
+                .populate("author")
+                .populate("content")
+                .populate("replyTo")
+                .exec((err, posts) => {
+                    if(err) {
+                        return next(err);
+                    }else {
+                        return res.status(200).send(
+                            {
+                                success: true,
+                                posts: posts,
+                            }
+                        )
+                    }
+                })
+            }
+        }
+    })
+
+    Post.find({author: user})
+    .sort({createdAt: -1,})
+    .populate("author")
+    .populate("content")
+    .populate("replyTo")
+    .exec((err, posts) => {
+        if(err) {
+            return next(err);
+        }else {
+            return res.status(200).send(
+                {
+                    success: true,
+                    posts: posts,
+                }
+            )
+        }
+    })
+}
+
+exports.allPosts = (req, res, next) => {
+    //get most recent posts made by user, following
+    Post.find({
+        $or: [
+            {
+                author: req.user,
+            },
+            {
+                author: {
+                    $in: req.user.following
+                }
+            }
+        ]
+    })
     .sort({createdAt: -1,})
     .populate("author")
     .populate("content")
@@ -75,7 +141,6 @@ exports.post_get = (req, res, next) => {
             currentUser: {
                 userLiked: userHasLiked,
                 userShared: userHasShared,
-
             }
         })
     })
@@ -100,7 +165,7 @@ exports.post_create = [
         }else {
 
             let post = new Post({
-                author: req.user._id,
+                author: req.user,
                 content: req.body.content,
             });
 

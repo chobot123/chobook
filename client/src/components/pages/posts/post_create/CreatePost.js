@@ -26,9 +26,16 @@ const CreatePost = (props) => {
         .then((response) => {
             response.json()
                 .then((data) => {
-                    //DO SOMETHING
+                    if(data.post){
+                        props.setPosts(prev => [...prev, data.post]);
+                    }else {
+                        setContent("");
+                    }
                 })
-                .catch(err => console.log(err))
+                .catch(err => {
+                    console.log(err);
+                    setContent("");
+                })
         }).catch(err => console.log(err))
     }
 
@@ -40,7 +47,7 @@ const CreatePost = (props) => {
     }
 
     return (
-        <Container className="create-post p-1">
+        <Container className="create-post p-1 pb-3">
             <div className="profile-pic">
                 <Image src={image} alt="profile picture"  
                     roundedCircle="true"
@@ -53,18 +60,18 @@ const CreatePost = (props) => {
                 />
             </div>
             <div className="post-form w-100">
-                <Form>
+                <Form onSubmit={(e) => handleSubmit(e)}>
                     <Form.Group className="post content">
                         <Form.Control 
                             as="textarea"
-                            rows="1"
+                            rows="2"
                             placeholder="What's Happening?" 
                             onInput={(e) => autoResizeText(e)}
                             onChange={(e) => setContent(e.target.value)}
                         />
                     </Form.Group>
 
-                    <Button className="post submit" variant="primary" type="submit">Post</Button>
+                    <Button className="post submit" variant="primary" type="submit" disabled={(content.length > 0) ? false : true}>Post</Button>
                 </Form>
             </div>
         </Container>
