@@ -1,71 +1,62 @@
 import {React, useEffect, useState} from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./pages/auth/login/Login";
 import "./App.css";
 import Signup from "./pages/auth/signup/Signup";
-import Post from "./pages/post/Post";
 import NavigationBar from "./navbar/Navbar";
 import { Container, Row, Col } from "react-bootstrap";
 import Home from "./pages/home/Home";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from "./utility/ProtectedRoute";
 import SearchBar from "./navbar/SearchBar";
+import Profile from "./pages/profile/Profile";
 
 function App() {
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const verified = (loggedIn) => {
-    setIsLoggedIn(loggedIn);
-  }
+  const [isLoading, setLoading] = useState(true);
+  let navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/api/auth/",
-    {
+    fetch("/api/auth/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
       }
     })
     .then((response) => {
-      response.json() 
-      .then((data) => {
-        console.log(data);
-        data.success ? setIsLoggedIn(true) : setIsLoggedIn(false);
-      })
-      .catch(err => console.log(err))
+      response.json()
+        .then((data) => {
+          if(data.success) {
+            console.log(data.user);
+            setUser(data.user);
+            setLoading(false);
+          }
+        })
+        .catch(err => console.log(err))
     })
     .catch(err => console.log(err))
-}, [])
+  }, [])
 
   return (
     <div className="App">
       <div className="main">
-        <Container fluid className="content d-flex h-100">
-          <Row className="w-100 flex-nowrap">
-            <Col xs="auto" sm="3" className="leftbar">
-              <NavigationBar />
-            </Col>
-            <Col xs="auto" sm="9">
-              <Row className="h-100">
-                <Col xs="auto" lg="7">
-                  <Routes>
-                    <Route index element={<Login verified={verified}/>} />
-                    <Route path="login" element={<Login />} />
-                    <Route path="signup" element={<Signup />}  />
-                    <Route path="home" element={<Home />} />
-                  </Routes>
-                </Col>
-                <Col sm="5" className="side-nav d-none d-lg-block">
-                  <SearchBar />
-                </Col>
-              </Row>  
-            </Col>
-          </Row>
-        </Container>      
+        {(isLoading) ? "" : <Container fluid className="content d-flex h-100">
+          <NavigationBar />
+          <Container className="main h-100">
+            <Routes>
+              <Route element={<ProtectedRoute user={user}/>}>
+                <Route index path="home" element={<Home />} />
+                <Route path=":username" element={<Profile />} />
+              </Route>
+              <Route index element={<Login />} />
+              <Route path="login" element={<Login />} />
+              <Route path="signup" element={<Signup />}  />
+            </Routes>
+          </Container>
+            <SearchBar />
+        </Container> }     
       </div>
     </div>
   );

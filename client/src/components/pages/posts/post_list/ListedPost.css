@@ -1,0 +1,95 @@
+.ListedPost {
+    display: flex;
+    gap: 0.5%;
+    width: 100%;
+    border-bottom: 1px solid rgba(202, 202, 202, 0.15);
+}
+
+.info>.user {
+    display: flex;
+    gap: 5px;
+    padding-bottom: 0;
+}
+
+.ListedPost>.profile-picture {
+    padding-top: 0.75rem;
+}
+
+.info {
+    padding-top: 0.375rem;
+    padding-left: 0.375rem;
+}
+
+.button-container>*>.icon-wrapper {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-container,
+.button-container>* {
+    display: flex;
+    align-items: center;
+}
+
+.button-container>* {
+    flex: 1;
+    color: rgba(255, 255, 255, 0.719);
+}
+
+.button-container>*>* {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    padding: 0.15rem;
+    width: 24px;
+    height: 24px;
+}
+
+.icon-wrapper>* {
+    color: rgba(255, 255, 255, 0.719);
+}
+
+.replies-wrapper,
+.shares-wrapper,
+.likes-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.replies-wrapper:hover .icon-wrapper>*,
+.replies-wrapper:hover .num-replies{
+    color: rgb(81, 105, 211) !important;
+}
+
+.replies-wrapper:hover .icon-wrapper.replies {
+    background-color: rgba(81, 105, 211, 0.2) !important;
+    border-radius: 50%;
+}
+
+.shares-wrapper:hover .icon-wrapper>*,
+.shares-wrapper:hover .num-shares{
+    color: rgb(14, 94, 0) !important;
+}
+
+.shares-wrapper:hover .icon-wrapper.shares {
+    background-color: rgba(14, 94, 0, 0.2) !important;
+    border-radius: 50%;
+}
+
+.likes-wrapper:hover .icon-wrapper>*,
+.likes-wrapper:hover .num-likes{
+    color: rgb(236, 0, 90) !important;
+}
+
+.likes-wrapper:hover .icon-wrapper.likes {
+    background-color: rgba(236, 0, 91, 0.2) !important;
+    border-radius: 50%;
+}

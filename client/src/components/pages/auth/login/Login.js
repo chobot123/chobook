@@ -32,11 +32,11 @@ const Login = (props) => {
             response.json()
                 .then((data) => {
                     if(data.success) {
-                        props.verified(data.success);
                         navigate("/home");
                     }else{
                         setLoginStatus(data.success);
                         setMessage(data.message);
+                        setPassword("");
                     }
                 })
                 .catch((err) => {console.log(err);})

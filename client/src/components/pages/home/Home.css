@@ -5,8 +5,16 @@
     padding: 0.75rem;
 }
 
-.container>.wrapper {
+.container-fluid>.wrapper {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    background-color: rgba(42, 52, 63, 0.555);
+    border-radius: 24px;
+    color: white;
+    padding: 0.75rem;
+}
+
+.navbar-link {
+    user-select: none;
 }

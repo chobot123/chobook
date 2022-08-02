@@ -1,6 +1,8 @@
 .App>.main {
     height: 100%;
     overflow-x: hidden;
+    background-color: rgb(21, 32, 43);
+    color: white;
 }
 
 .content.container {
@@ -22,4 +24,30 @@ ul {
 
 .wrapper {
     margin-top: 2rem;
+}
+
+.row {
+    flex-wrap: nowrap;
+}
+
+@media (min-width: 768px) {
+    .main {
+        flex-basis: 600px;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 1080px){
+    .search-bar {
+        display: none !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .navigation {
+        flex-grow: 0;
+        flex-basis: content;
+        margin-left: 0;
+    }
 }

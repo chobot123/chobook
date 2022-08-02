@@ -1,0 +1,9 @@
+.follows,
+.follows>* {
+    display: flex;
+}
+
+.links>* {
+    display: flex;
+    justify-content: center;
+}
