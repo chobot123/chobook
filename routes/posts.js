@@ -5,7 +5,7 @@ const postController = require("../controllers/postController");
 //get posts user created
 router.get("/", postController.posts)
 
-router.get("/:user/posts", postController.getPosts);
+router.get("/:username/posts", postController.getPosts);
 
 //get posts from user following and user created
 router.get("/all", postController.allPosts)

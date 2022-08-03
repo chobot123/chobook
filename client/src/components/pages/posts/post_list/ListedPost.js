@@ -110,7 +110,6 @@ const ListedPost = (props) => {
             .then((data) => {
                 console.log(data);
                 if(data.success) {
-
                     if(data.post.replyTo) {
                         setReplyTo(data.post.replyTo);
                     }

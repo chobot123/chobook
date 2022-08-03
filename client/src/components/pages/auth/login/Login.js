@@ -9,11 +9,13 @@ const Login = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginStatus, setLoginStatus] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
 
     const navigate = useNavigate();
 
     const handleLogin = (e) => {
+        setLoading(true);
         e.preventDefault();
 
         //login api
@@ -32,8 +34,11 @@ const Login = (props) => {
             response.json()
                 .then((data) => {
                     if(data.success) {
-                        navigate("/home");
+                        props.setLoggedIn(true);
                     }else{
+                        setLoading(false);
+                        const passwordInput = document.getElementById("auth-password-login");                       
+                        passwordInput.value = "";
                         setLoginStatus(data.success);
                         setMessage(data.message);
                         setPassword("");
@@ -43,13 +48,18 @@ const Login = (props) => {
         })
         .catch((err) => {
             console.log(err);
-        })
-        
+        }) 
     }
+
+    useEffect(() => {
+        if(!props.loggedIn) {
+            setLoading(false);
+        }
+    }, [])
 
     return (
         <Container className="auth login pb-5">
-            <div className="wrapper p-5">
+            <div className="wrapper p-5" style={ {display: (loading) ? "none" : "block"}}>
                 <div className="h1 auth header pb-3">Chobook</div>
 
                 <div className="auth error-container" style={
@@ -76,7 +86,8 @@ const Login = (props) => {
 
                     <Form.Group className="auth password mt-3">
                         <Form.Label className="auth label">Password</Form.Label>
-                        <Form.Control className="auth" 
+                        <Form.Control className="auth"
+                                      id="auth-password-login" 
                                       type="password" 
                                       onChange={(e) => setPassword(e.target.value)}
                                       />

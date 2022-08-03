@@ -1,14 +1,14 @@
-const User = require("../models/PostSchema");
+const User = require("../models/UserSchema");
 
 exports.user_get = async (req, res, next) => {
 
-    const username = (req.params.id === "home") ? req.user : req.params.id;
+    const username = (req.params.id === "self") ? req.user : req.params.id;
     const user = await User.findOne({ "username": username});
 
     if(user === null){
         return res.status(404).send(
             {
-                success: fail,
+                success: false,
                 message: "User not found"
             }
         )
@@ -20,6 +20,36 @@ exports.user_get = async (req, res, next) => {
             }
         )
     }
+}
+
+exports.getByUsername = (req, res, next) => {
+    // console.log("username: " + req.params.username);
+    const username = req.params.username;
+    User.findOne({
+        "username": username,   
+    })
+    .populate("followers")
+    .populate("following")
+    .populate("likedPosts")
+    .populate("sharedPosts")
+    .exec((err, user) => {
+        if(err) return next(err);
+        if(user){
+            return res.status(200).send(
+                {
+                    success: true,
+                    user: user,
+                }
+            )
+        }else {
+            return res.status(404).send(
+                {
+                    success: fail,
+                    message: "user not found",
+                }
+            )
+        }
+    })
 }
 
 exports.follow = (req, res, next) => {

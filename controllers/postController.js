@@ -26,16 +26,15 @@ exports.posts = (req, res, next) => {
 }
 
 exports.getPosts = (req, res, next) => {
-    const username = req.params.username;
 
-    User.findOne({username: username})
+    User.findOne({username: req.params.username})
     .exec((err, user) => {
         if(err){
             return next(err);
         }else {
             if(user) {
                 Post.find({author: user})
-                .sort({createdAt: -1,})
+                .sort({createdAt: -1})
                 .populate("author")
                 .populate("content")
                 .populate("replyTo")
@@ -51,25 +50,14 @@ exports.getPosts = (req, res, next) => {
                         )
                     }
                 })
+            } else {
+                return res.status(402).send(
+                    {
+                        success: fail,
+                        message: "user not found",
+                    }
+                )
             }
-        }
-    })
-
-    Post.find({author: user})
-    .sort({createdAt: -1,})
-    .populate("author")
-    .populate("content")
-    .populate("replyTo")
-    .exec((err, posts) => {
-        if(err) {
-            return next(err);
-        }else {
-            return res.status(200).send(
-                {
-                    success: true,
-                    posts: posts,
-                }
-            )
         }
     })
 }
@@ -127,7 +115,7 @@ exports.post_get = (req, res, next) => {
     })
 
     Post.findById(post_id)
-    .populate("author", "firstName lastName username")
+    .populate("author")
     .populate("content")
     .populate("likes")
     .populate("replies")

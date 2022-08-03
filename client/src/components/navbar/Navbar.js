@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {RiHome7Fill, RiMailFill, RiUser3Fill, RiBellFill, RiDoorOpenFill, RiBearSmileLine } from "react-icons/ri";
 import "./Navbar.css";
 
-const NavigationBar = () => {
+const NavigationBar = (props) => {
 
     const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const NavigationBar = () => {
             response.json()
                 .then((data) => {
                     if(data.success){
-                        navigate("/");
+                        navigate("/login");
                     }
                 })
                 .catch(err => console.log(err))
@@ -47,7 +47,7 @@ const NavigationBar = () => {
                     <div className="img-nav"><RiMailFill alt="messages icon"/></div> 
                     <div  className="navbar-link d-none d-xl-block">Messages</div>
                 </div>
-                <div className="profile" onClick={() => handleNavigate("/profile")}>
+                <div className="profile" onClick={() => handleNavigate("/" + props.user.username)}>
                     <div className="img-nav"><RiUser3Fill alt="profile icon"/></div> 
                     <div  className="navbar-link d-none d-xl-block">Profile</div>
                 </div>

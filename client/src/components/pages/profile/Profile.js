@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import { NavLink, Route, Routes, useParams } from "react-router-dom";
 import Posts from "../posts/Posts";
@@ -7,8 +7,8 @@ import "./Profile.css";
 
 const Profile = () => {
 
+    const [user, setUser] = useState(null);
     let { username } = useParams();
-    console.log(username);
     
     let activeStyle = {
         textDecoration: "underline",
@@ -16,11 +16,36 @@ const Profile = () => {
 
     let activeClassName = "underline";
 
+    useEffect(() => {
+        fetch("/api/users/username/" + username,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        .then((response) => {
+            response.json()
+                .then((data) => {
+                    console.log(data);
+                    if(data.success){
+                        setUser(data.user);
+                    }
+                })
+                .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
+    }, [])
+
+    useEffect(() => {
+        console.log(user);
+    }, [user])
+
     return (
         <Container fluid>
             <div className="wrapper">
                 <div className="header">
-                    <div className="title h5 b2 mb-0">Joshua Cho</div>
+                    {/* <div className="title h5 b2 mb-0">{user.firstName + " " + user.lastName}</div> */}
                     <div className="num-posts text-muted">8 Tweets</div>
                 </div>
                 <div className="user-info">

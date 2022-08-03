@@ -110,18 +110,26 @@ exports.logout = (req, res, next) => {
 }
 
 exports.checkSession = (req, res, next) => {
-    if(req.session){
-        console.log("test")
-        return res.status(200).send(
-            {
-                success: true,
-                user: req.user,
+    if(req.session.passport){
+
+        User.findOne(req.user)
+        .exec((err, user) => {
+            if(err) {return next(err)}
+
+            if(user) {
+                return res.status(200).send(
+                    {
+                        success: true,
+                        user: user,
+                    }
+                )
+            }else {
+                return res.status(402).send(
+                    {
+                        success: false,
+                    }
+                )
             }
-        )
+        })
     }
-    return res.status(402).send(
-        {
-            success: false,
-        }
-    )
 }
