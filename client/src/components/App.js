@@ -16,8 +16,8 @@ function App() {
 
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -31,32 +31,32 @@ function App() {
     .then((response) => {
       response.json()
         .then((data) => {
-
+          console.log(data);
           if(data.success) {
             setUser(data.user);
+          }else {
+            setLoggedIn(false);
           }
         })
         .catch(err => console.log(err))
-      setLoading(false);
     })
-    .catch(err => console.log(err))
+    .catch((err) => {
+      console.log(err)
+    })
+    setLoading(false);
   }, [loggedIn])
 
   useEffect(() => {
-    if(loggedIn) {
-      <Navigate to="/home" replace />
+    if(user) {
+      navigate("/home", {replace: true})
     }
-  }, [loggedIn])
-
-  useEffect(() => {
-    console.log(user);
   }, [user])
 
   return (
     <div className="App">
       <div className="main">
         {
-          (isLoading) ? "" : 
+          (isLoading) ? "test" : 
           <Container fluid className="content d-flex h-100">
             <NavigationBar user={user}/>
             <Container className="main h-100">

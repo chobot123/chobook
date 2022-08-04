@@ -85,9 +85,11 @@ UserSchema.virtual("numSharedPosts").get(function(){
     return this.sharedPosts.length;
 })
 
-UserSchema.virtual("numPosts").get(async function(){
-    const count = await this.model("Post").countDocuments({ author: this.id });
-    return count; 
-})
+UserSchema.virtual("numPosts", {
+    ref: "Post",
+    localField: "_id",
+    foreignField: "author",
+    count: true,
+});
 
 module.exports = mongoose.model("User", UserSchema);

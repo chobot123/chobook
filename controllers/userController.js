@@ -32,6 +32,8 @@ exports.getByUsername = (req, res, next) => {
     .populate("following")
     .populate("likedPosts")
     .populate("sharedPosts")
+    .populate("numPosts")
+    .populate("createdAt")
     .exec((err, user) => {
         if(err) return next(err);
         if(user){

@@ -127,9 +127,17 @@ exports.checkSession = (req, res, next) => {
                 return res.status(402).send(
                     {
                         success: false,
+                        user: null,
                     }
                 )
             }
         })
+    }else {
+        return res.status(402).send(
+            {
+                success: false,
+                user: null,
+            }
+        )
     }
 }

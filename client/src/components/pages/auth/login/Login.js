@@ -12,10 +12,8 @@ const Login = (props) => {
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
 
-    const navigate = useNavigate();
-
     const handleLogin = (e) => {
-        setLoading(true);
+
         e.preventDefault();
 
         //login api
@@ -36,7 +34,6 @@ const Login = (props) => {
                     if(data.success) {
                         props.setLoggedIn(true);
                     }else{
-                        setLoading(false);
                         const passwordInput = document.getElementById("auth-password-login");                       
                         passwordInput.value = "";
                         setLoginStatus(data.success);
@@ -52,10 +49,11 @@ const Login = (props) => {
     }
 
     useEffect(() => {
+        console.log("logged in: " + props.loggedIn);
         if(!props.loggedIn) {
             setLoading(false);
         }
-    }, [])
+    }, [props.loggedIn])
 
     return (
         <Container className="auth login pb-5">

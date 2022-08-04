@@ -7,7 +7,7 @@ import "./Profile.css";
 
 const Profile = () => {
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState("");
     let { username } = useParams();
     
     let activeStyle = {
@@ -45,8 +45,8 @@ const Profile = () => {
         <Container fluid>
             <div className="wrapper">
                 <div className="header">
-                    {/* <div className="title h5 b2 mb-0">{user.firstName + " " + user.lastName}</div> */}
-                    <div className="num-posts text-muted">8 Tweets</div>
+                    <div className="title h5 b2 mb-0">{user.firstName + " " + user.lastName}</div>
+                    <div className="num-posts text-muted">{user.numPosts} {(user.numPosts > 1) ? "Posts" : "Post"}</div>
                 </div>
                 <div className="user-info">
                     <div className="profile-pic pb-2 pt-2">
@@ -61,8 +61,8 @@ const Profile = () => {
                         />
                     </div>
                     <div className="user">
-                        <div className="name">Joshua Cho</div>
-                        <div className="username text-muted">@JC2332323</div>
+                        <div className="name">{user.firstName + " " + user.lastName}</div>
+                        <div className="username text-muted">@{user.username}</div>
                         <div className="createdAt text-muted pb-2 pt-2">Joined July 2022</div>
                         <div className="follows">
                             <div className="following text-muted me-4">
