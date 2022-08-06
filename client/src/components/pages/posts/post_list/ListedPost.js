@@ -3,9 +3,11 @@ import { Container } from "react-bootstrap";
 import ProfilePicture from "../../../utility/profilepicture_post/ProfilePicture";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TbBrandHipchat, TbRepeat, TbHeart } from "react-icons/tb";
+import ModalPost from "../post_modal/ModalPost";
 import "./ListedPost.css";
+import { useNavigate } from "react-router-dom";
 
-const ListedPost = (props) => {
+const ListedPost = ({post, setPosts}) => {
 
     const [userLiked, setUserLiked] = useState(false);
     const [replyTo, setReplyTo] = useState("");
@@ -17,12 +19,27 @@ const ListedPost = (props) => {
     const [likeCount, setLikeCount] = useState(0);
     const [replyCount, setReplyCount] = useState(0);
     const [shareCount, setShareCount] = useState(0);
+    const [show, setShow] = useState(false);
+    const navigate = useNavigate();
+
+    const handleNavigate = (e) => {
+        e.preventDefault();
+        navigate("/" + username + "/status/" + post.id);
+    }
+
+    const openModal = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setShow(true);
+    }
 
     const handleLike = (e) => {
+
+        e.stopPropagation();
         e.preventDefault();
 
         if(!userLiked) {
-            fetch("/api/posts/update/like/" + props.post.id,
+            fetch("/api/posts/update/like/" + post.id,
             {
                 method: "PUT",
                 headers: {
@@ -38,7 +55,7 @@ const ListedPost = (props) => {
                 )
             })
         }else {
-            fetch("/api/posts/update/dislike/" + props.post.id,
+            fetch("/api/posts/update/dislike/" + post.id,
             {
                 method: "PUT",
                 headers: {
@@ -58,10 +75,11 @@ const ListedPost = (props) => {
 
     const handleShare = (e) => {
 
+        e.stopPropagation();
         e.preventDefault();
 
         if(!userShared) {
-            fetch("/api/posts/update/share/" + props.post.id,
+            fetch("/api/posts/update/share/" + post.id,
             {
                 method: "PUT",
                 headers: {
@@ -71,14 +89,13 @@ const ListedPost = (props) => {
             .then(response => {
                 response.json()
                     .then((data) => {
-                        console.log(data);
                         setUserShared(data.currentUser.userShared)
                         setShareCount(data.post.numShares);
                     }
                 )
             })
         }else {
-            fetch("/api/posts/update/unshare/" + props.post.id,
+            fetch("/api/posts/update/unshare/" + post.id,
             {
                 method: "PUT",
                 headers: {
@@ -88,7 +105,6 @@ const ListedPost = (props) => {
             .then(response => {
                 response.json()
                     .then((data) => {
-                        console.log(data);
                         setUserShared(data.currentUser.userShared)
                         setShareCount(data.post.numShares);
                     }
@@ -98,7 +114,8 @@ const ListedPost = (props) => {
     }
 
     useEffect(() => {
-        fetch("/api/posts/" + props.post.id, 
+
+        fetch("/api/posts/" + post.id, 
         {
             method: "GET",
             headers: {
@@ -108,7 +125,6 @@ const ListedPost = (props) => {
         .then((response) => {
             response.json()
             .then((data) => {
-                console.log(data);
                 if(data.success) {
                     if(data.post.replyTo) {
                         setReplyTo(data.post.replyTo);
@@ -131,7 +147,10 @@ const ListedPost = (props) => {
     }, [])
 
     return (
-        <Container fluid className="ListedPost w-100 p-1 pb-2">
+        <Container fluid 
+            className="ListedPost w-100 p-1 pb-2"
+            onClick={(e) => {handleNavigate(e)}}
+        >
             <ProfilePicture />
             <div className="info w-100">
                 <div className="reply-to"
@@ -161,7 +180,7 @@ const ListedPost = (props) => {
                     <div className="button-container mt-1">
 
                         <div className="replies">
-                            <div className="replies-wrapper">
+                            <div className="replies-wrapper" onClick={(e) => openModal(e)}>
                                 <div className="icon-wrapper replies">
                                     <TbBrandHipchat />
                                 </div>
@@ -191,6 +210,14 @@ const ListedPost = (props) => {
                     </div>
                 </div>
             </div>
+            <ModalPost fullName={fullName} 
+                       username={username} 
+                       content={content} 
+                       setShow={setShow} 
+                       show={show} 
+                       postId={post.id}
+                       setPosts={setPosts}
+            />
         </Container>
     )
 }

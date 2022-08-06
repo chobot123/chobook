@@ -46,7 +46,7 @@ exports.getByUsername = (req, res, next) => {
         }else {
             return res.status(404).send(
                 {
-                    success: fail,
+                    success: false,
                     message: "user not found",
                 }
             )

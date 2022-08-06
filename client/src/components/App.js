@@ -11,10 +11,17 @@ import ProtectedRoute from "./utility/ProtectedRoute";
 import SearchBar from "./navbar/SearchBar";
 import Profile from "./pages/profile/Profile";
 import PublicRoute from "./utility/PublicRoute";
+import Post from "./pages/posts/post_single/Post";
+import Posts from "./pages/posts/Posts";
+import PostsReplies from "./pages/posts/PostsReplies";
+import PostsShares from "./pages/posts/PostsShares";
+import PostsLikes from "./pages/posts/PostsLikes";
+import ModalPost from "./pages/posts/post_modal/ModalPost";
+import PostsHandler from "./pages/profile/PostsHandler";
 
 function App() {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState("");
   const [posts, setPosts] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(true);
@@ -31,24 +38,42 @@ function App() {
     .then((response) => {
       response.json()
         .then((data) => {
-          console.log(data);
           if(data.success) {
             setUser(data.user);
           }else {
             setLoggedIn(false);
           }
+          
         })
         .catch(err => console.log(err))
     })
     .catch((err) => {
       console.log(err)
     })
+
     setLoading(false);
   }, [loggedIn])
 
   useEffect(() => {
     if(user) {
-      navigate("/home", {replace: true})
+      fetch("api/posts/all", {
+        method: "GET",
+        headers: {
+        "Content-Type": "application/json"
+        }
+      })
+      .then((response) => {
+        response.json()
+          .then((data) => {
+            if(data.success && data.posts) {
+              setPosts(data.posts);
+            }
+          })
+          .catch(err => console.log(err))
+      })
+      .catch(err => console.log(err))
+
+      // navigate("/home", {replace: true})
     }
   }, [user])
 
@@ -56,14 +81,27 @@ function App() {
     <div className="App">
       <div className="main">
         {
-          (isLoading) ? "test" : 
+          (isLoading) ? "" : 
           <Container fluid className="content d-flex h-100">
-            <NavigationBar user={user}/>
+
+            {(!user) ? "" : <NavigationBar user={user}/>}
+
             <Container className="main h-100">
               <Routes>
                 <Route element={<ProtectedRoute user={user}/>}>
-                  <Route path="home" element={<Home />} />
-                  <Route path=":username/*" element={<Profile />} />
+
+                  <Route path="home" element={<Home username={user.username} setPosts={setPosts}/>}>
+                    <Route index element={<Posts />} />
+                  </Route>
+
+                  <Route path=":username" element={<Profile />}>
+                      <Route path="posts" element={<Posts />} />
+                      <Route path="with_replies" element={<PostsReplies />} />
+                      <Route path="shares" element={<PostsShares />} />
+                      <Route path="likes" element={<PostsLikes />} />
+                      <Route path="status/:post" element={<Post/>} />
+                  </Route>
+                  
                 </Route>
                 <Route element={<PublicRoute user={user} />}>
                   <Route index element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
@@ -72,7 +110,9 @@ function App() {
                 </Route>
               </Routes>
             </Container>
-            <SearchBar />
+
+            {(!user) ? "" : <SearchBar loggedIn={loggedIn}/>}
+
           </Container> 
         }     
       </div>

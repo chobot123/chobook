@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import image from "./placeholder.jpg";
 import "./CreatePost.css";
-import { TbInfoSquare } from "react-icons/tb";
 
-const CreatePost = (props) => {
+const ReplyPost = ({postId, setPosts}) => {
     const [content, setContent] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        console.log("reply")
         fetch("/api/posts/", 
         {
             method: "POST",
@@ -19,14 +18,16 @@ const CreatePost = (props) => {
             body: JSON.stringify(
                 {
                     "content": content,
+                    "replyTo": postId,
                 }
             )
         })
         .then((response) => {
             response.json()
                 .then((data) => {
+                    console.log(data)
                     if(data.post){
-                        props.setPosts(prev => [...prev, data.post]);
+                        setPosts(prev => [...prev, data.post]);
                     }else {
                         setContent("");
                     }
@@ -45,8 +46,10 @@ const CreatePost = (props) => {
 
     }
 
+    useEffect(() => console.log(content), [content])
+
     return (
-        <Container className="create-post p-1 pb-3">
+        <Container className="reply-post p-1 pb-3">
             <div className="profile-pic">
                 <Image src={image} alt="profile picture"  
                     roundedCircle="true"
@@ -64,7 +67,7 @@ const CreatePost = (props) => {
                         <Form.Control 
                             as="textarea"
                             rows="2"
-                            placeholder="What's Happening?" 
+                            placeholder="Add a Response" 
                             onInput={(e) => autoResizeText(e)}
                             onChange={(e) => setContent(e.target.value)}
                         />
@@ -77,4 +80,4 @@ const CreatePost = (props) => {
     )
 }
 
-export default CreatePost;
+export default ReplyPost;

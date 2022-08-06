@@ -4,28 +4,28 @@ const User = require("../models/UserSchema");
 
 
 //gets posts of the current user
+// exports.posts = (req, res, next) => {
+
+//     Post.find({author: req.user})
+//     .sort({createdAt: -1,})
+//     .populate("author")
+//     .populate("content")
+//     .populate("replyTo")
+//     .exec((err, posts) => {
+//         if(err) {
+//             return next(err);
+//         }else {
+//             return res.status(200).send(
+//                 {
+//                     success: true,
+//                     posts: posts,
+//                 }
+//             )
+//         }
+//     })
+// }
+
 exports.posts = (req, res, next) => {
-
-    Post.find({author: req.user})
-    .sort({createdAt: -1,})
-    .populate("author")
-    .populate("content")
-    .populate("replyTo")
-    .exec((err, posts) => {
-        if(err) {
-            return next(err);
-        }else {
-            return res.status(200).send(
-                {
-                    success: true,
-                    posts: posts,
-                }
-            )
-        }
-    })
-}
-
-exports.getPosts = (req, res, next) => {
 
     User.findOne({username: req.params.username})
     .exec((err, user) => {
@@ -53,7 +53,7 @@ exports.getPosts = (req, res, next) => {
             } else {
                 return res.status(402).send(
                     {
-                        success: fail,
+                        success: false,
                         message: "user not found",
                     }
                 )
@@ -76,6 +76,106 @@ exports.allPosts = (req, res, next) => {
             }
         ]
     })
+    .sort({createdAt: -1,})
+    .populate("author")
+    .populate("content")
+    .populate("replyTo")
+    .exec((err, posts) => {
+        if(err) {
+            return next(err);
+        }else {
+            return res.status(200).send(
+                {
+                    success: true,
+                    posts: posts,
+                }
+            )
+        }
+    })
+}
+
+exports.getLikes = async (req, res, next) => {
+    const username = req.params.username;
+
+    //TEMP(??) - get user for Post query in getting posts user has liked
+    let user = await User.findOne({username: username}).exec();
+
+    Post.find(
+        {
+            likes: {
+                $in: user,
+            }
+        }
+    )
+    .sort({createdAt: -1,})
+    .populate("author")
+    .populate("content")
+    .populate("replyTo")
+    .exec((err, posts) => {
+        if(err) {
+            return next(err);
+        }else {
+            return res.status(200).send(
+                {
+                    success: true,
+                    posts: posts,
+                }
+            )
+        }
+    })
+}
+
+exports.getShares = async (req, res, next) => {
+    const username = req.params.username;
+
+    //TEMP(??) - get user for Post query in getting posts user has liked
+    let user = await User.findOne({username: username}).exec();
+
+    Post.find(
+        {
+            sharedBy: {
+                $in: user,
+            }
+        }
+    )
+    .sort({createdAt: -1,})
+    .populate("author")
+    .populate("content")
+    .populate("replyTo")
+    .exec((err, posts) => {
+        if(err) {
+            return next(err);
+        }else {
+            return res.status(200).send(
+                {
+                    success: true,
+                    posts: posts,
+                }
+            )
+        }
+    })
+}
+
+exports.getReplies = async (req, res, next) => {
+    const username = req.params.username;
+
+    //TEMP(??) - get user for Post query in getting posts user has liked
+    let user = await User.findOne({username: username}).exec();
+
+    Post.find(
+        {
+            $or: [
+                {
+                    author: user,
+                },
+                {
+                    replies: {
+                        $in: user,
+                    }
+                }
+            ]
+        }
+    )
     .sort({createdAt: -1,})
     .populate("author")
     .populate("content")
@@ -161,7 +261,8 @@ exports.post_create = [
 
                 Post.findOneAndUpdate(req.body.parent, {
                     $addToSet: {replies: post}
-                }, {new: true}, (err, result) => {
+                }, {new: true})
+                .exec((err, result) => {
                     if(err) {return next(err)}
 
                     post.replyChain = result.replyChain;

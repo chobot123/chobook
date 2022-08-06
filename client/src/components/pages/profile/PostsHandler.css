@@ -1,0 +1,8 @@
+.links>*>* {
+    color: #6c757d!important;
+    text-decoration: none;
+}
+
+.active {
+    color: white !important;
+}

@@ -3,9 +3,15 @@ const router = express.Router();
 const postController = require("../controllers/postController");
 
 //get posts user created
-router.get("/", postController.posts)
+// router.get("/", postController.posts)
 
-router.get("/:username/posts", postController.getPosts);
+router.get("/:username/posts", postController.posts);
+
+router.get("/:username/posts/likes", postController.getLikes)
+
+router.get("/:username/posts/replies", postController.getReplies) 
+
+router.get("/:username/posts/shares", postController.getShares)
 
 //get posts from user following and user created
 router.get("/all", postController.allPosts)

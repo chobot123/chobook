@@ -49,7 +49,6 @@ const Login = (props) => {
     }
 
     useEffect(() => {
-        console.log("logged in: " + props.loggedIn);
         if(!props.loggedIn) {
             setLoading(false);
         }

@@ -5,6 +5,11 @@
     border-bottom: 1px solid rgba(202, 202, 202, 0.15);
 }
 
+.ListedPost:hover {
+    /*highlight color*/
+    background-color: rgba(42, 52, 63, 0.555);
+}
+
 .info>.user {
     display: flex;
     gap: 5px;

@@ -5,6 +5,12 @@
     border-bottom: 1px solid rgba(202, 202, 202, 0.15);
 }
 
+.reply-post {
+    display: flex;
+    gap: 0.5%;
+    width: 100%;
+}
+
 .post.content>.form-control {
     border: none;
     box-shadow: none;
