@@ -4,9 +4,7 @@ import CreatePost from "../posts/post_create/CreatePost";
 import { Outlet } from "react-router-dom";
 import "./Home.css";
 
-const Home = ({username, setPosts}) => {
-
-    const home = true;
+const Home = ({posts, setPosts}) => {
 
     return (
         <Container fluid className="home">
@@ -15,7 +13,7 @@ const Home = ({username, setPosts}) => {
                 <div className="tweet w-100">
                     <CreatePost setPosts={setPosts}/>
                 </div>
-                <Outlet context={[username, home]}/>
+                <Outlet context={[posts, setPosts]}/>
             </div>
         </Container>
     )

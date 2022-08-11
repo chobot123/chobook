@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import ListedPost from "./post_list/ListedPost";
 
-const PostsReplies = ({username}) => {
+const PostsReplies = () => {
 
-    const [posts, setPosts] = useState([]);
+    const [username, posts, setPosts] = useOutletContext();
 
     useEffect(() => {
         fetch("/api/posts/" + username + "/posts/replies",

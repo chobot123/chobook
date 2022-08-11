@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { NavLink, Outlet, Route, Routes, useParams } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import "./PostsHandler.css";
 
-const PostsHandler = ({setSelector}) => {
+const PostsHandler = ({selector, setSelector, username, posts, setPosts}) => {
+
+    const home = null;
 
     const postsActive = () => {
         setSelector("posts");
@@ -35,7 +37,7 @@ const PostsHandler = ({setSelector}) => {
                         <NavLink
                             to=""
                             className={({isActive}) => 
-                                isActive ? handlePost() : undefined
+                                isActive ? postsActive() : undefined
                             }
                             end
                         >
@@ -47,7 +49,7 @@ const PostsHandler = ({setSelector}) => {
                         <NavLink
                             to="with_replies"
                             className={({ isActive}) => 
-                                isActive ? "active" : undefined
+                                isActive ? repliesActive() : undefined
                             }
                         >
                             Tweets & replies
@@ -58,7 +60,7 @@ const PostsHandler = ({setSelector}) => {
                         <NavLink
                             to="shares"
                             className={({ isActive}) => 
-                                isActive ? "active" : undefined
+                                isActive ? sharesActive() : undefined
                             }
                         >
                             Shares
@@ -69,7 +71,7 @@ const PostsHandler = ({setSelector}) => {
                         <NavLink
                             to="likes"
                             className={({ isActive}) => 
-                                isActive ? "active" : undefined
+                                isActive ? likesActive() : undefined
                             }
                         >
                             Likes
@@ -81,10 +83,7 @@ const PostsHandler = ({setSelector}) => {
             </Container>
 
             <Container fluid className="selected">
-                    {
-                        //username & posts
-                    }
-                    <Outlet />
+                    <Outlet context={[username, home, posts, setPosts]}/>
             </Container>
 
         </div>

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import ListedPost from "./post_list/ListedPost";
 
-const Posts = () => {
+const PostsAll = () => {
 
-    const [username, posts, setPosts] = useOutletContext();
+    const [posts, setPosts] = useOutletContext();
     
     useEffect(() => {
-        fetch("/api/posts/" + username + "/posts" ,
+        fetch("/api/posts/all",
             {
                 method: "GET",
                 headers: {
@@ -39,4 +39,4 @@ const Posts = () => {
     )
 }
 
-export default Posts;
+export default PostsAll;

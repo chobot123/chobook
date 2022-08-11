@@ -4,6 +4,7 @@ import ProfilePicture from "../../../utility/profilepicture_post/ProfilePicture"
 import ReplyPost from "../post_create/ReplyPost";
 import {IoCloseOutline} from "react-icons/io5";
 import "./ModalPost.css";
+import CreatePost from "../post_create/CreatePost";
 
 const ModalPost = ({
     fullName,
@@ -12,28 +13,25 @@ const ModalPost = ({
     setShow,
     show,
     postId,
-    setPosts
+    setPosts,
+    setReplyCount
 }) => {
 
     const [connectorHeight, setConnectorHeight] = useState(0);
+
+    const closeModal = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setShow(false);
+    }
 
     useEffect(() => {
         const contentHeight = document.querySelector(".md.content").offsetHeight;
         setConnectorHeight(contentHeight);
     }, [connectorHeight])
 
-    const handleButton = (e) => {
-        e.preventDefault();
-        setShow(false);
-    }
-
-    const handleBackground = (e) => {
+    const handlePropagation = (e) => {
         e.stopPropagation();
-        e.preventDefault();
-        console.log(e.target);
-        if(e.target.className ==="ModalPost") {
-            setShow(false);
-        }
     }
 
     return (
@@ -43,14 +41,13 @@ const ModalPost = ({
                     display: (show) ? "block" : "none"
                 }
             }
-
-            onClick={(e) => handleBackground(e)}
         >
+            <div className="background" onClick={(e) => closeModal(e)} />
             <Container fluid className="modal-container">
-                <div className="wrapper">
+                <div className="wrapper" onClick={(e) => handlePropagation(e)}>
                     <Container className="exit-modal">
                         <div className="exit-btn">
-                            <IoCloseOutline id="exit-modal-btn" onClick={(e) => handleButton(e)}/>
+                            <IoCloseOutline id="exit-modal-btn" onClick={(e) => closeModal(e)}/>
                         </div>
                     </Container>
                     <Container className="replyTo p-1">
@@ -68,7 +65,12 @@ const ModalPost = ({
                             height: connectorHeight,
                         }
                     }/>
-                    <ReplyPost postId={postId} setPosts={setPosts}/>
+                    <CreatePost 
+                        postId={postId} 
+                        setPosts={setPosts} 
+                        setShow={setShow}
+                        setReplyCount={setReplyCount}
+                    />
                 </div>
             </Container>
         </div>

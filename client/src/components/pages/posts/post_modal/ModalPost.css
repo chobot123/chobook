@@ -4,7 +4,21 @@
     top: 0%;
     height: 100%;
     width: 100%;
-    background-color: rgba(42, 52, 63, 0.479)
+}
+
+.ModalPost>.background {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(42, 52, 63, 0.479);
+    z-index: 1;
+}
+
+.modal-container {
+    z-index: 99;
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%);
 }
 
 .modal-container>.wrapper {

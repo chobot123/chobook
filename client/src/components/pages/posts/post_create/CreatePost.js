@@ -4,11 +4,17 @@ import image from "./placeholder.jpg";
 import "./CreatePost.css";
 import { TbInfoSquare } from "react-icons/tb";
 
-const CreatePost = (props) => {
+const CreatePost = ({
+    postId,
+    setPosts,
+    setShow,
+    setReplyCount
+}) => {
     const [content, setContent] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        e.target.reset();
 
         fetch("/api/posts/", 
         {
@@ -19,20 +25,30 @@ const CreatePost = (props) => {
             body: JSON.stringify(
                 {
                     "content": content,
+                    "replyTo": (postId) ? postId : undefined,
                 }
             )
         })
         .then((response) => {
             response.json()
                 .then((data) => {
-                    if(data.post){
-                        props.setPosts(prev => [...prev, data.post]);
-                    }else {
-                        setContent("");
+                    console.log(data);
+                    if(data.post && setPosts){
+                        setPosts(prev => [...prev, data.post]);
                     }
+                    if(data.post && setReplyCount){
+                        setReplyCount(prev => prev + 1);
+                    }
+                    if(setShow) {
+                        setShow(false);
+                    }
+                    setContent("");
                 })
                 .catch(err => {
                     console.log(err);
+                    if(setShow) {
+                        setShow(false);
+                    }
                     setContent("");
                 })
         }).catch(err => console.log(err))
@@ -70,7 +86,13 @@ const CreatePost = (props) => {
                         />
                     </Form.Group>
 
-                    <Button className="post submit" variant="primary" type="submit" disabled={(content.length > 0) ? false : true}>Post</Button>
+                    <Button className="post submit" 
+                            variant="primary" 
+                            type="submit"
+                            disabled={(content.length > 0) ? false : true}
+                    >
+                        Post
+                    </Button>
                 </Form>
             </div>
         </Container>

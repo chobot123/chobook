@@ -1,6 +1,6 @@
 import {React, useEffect, useState} from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate, Outlet } from "react-router-dom";
 import Login from "./pages/auth/login/Login";
 import "./App.css";
 import Signup from "./pages/auth/signup/Signup";
@@ -12,12 +12,11 @@ import SearchBar from "./navbar/SearchBar";
 import Profile from "./pages/profile/Profile";
 import PublicRoute from "./utility/PublicRoute";
 import Post from "./pages/posts/post_single/Post";
-import Posts from "./pages/posts/Posts";
+import PostsAll from "./pages/posts/PostsAll";
 import PostsReplies from "./pages/posts/PostsReplies";
 import PostsShares from "./pages/posts/PostsShares";
 import PostsLikes from "./pages/posts/PostsLikes";
-import ModalPost from "./pages/posts/post_modal/ModalPost";
-import PostsHandler from "./pages/profile/PostsHandler";
+import Posts from "./pages/posts/Posts";
 
 function App() {
 
@@ -90,16 +89,23 @@ function App() {
               <Routes>
                 <Route element={<ProtectedRoute user={user}/>}>
 
-                  <Route path="home" element={<Home username={user.username} setPosts={setPosts}/>}>
-                    <Route index element={<Posts />} />
+                  <Route path="home" 
+                         element={<Home 
+                                    username={user.username} 
+                                    posts={posts} 
+                                    setPosts={setPosts}/>}
+                  >
+                    <Route index element={<PostsAll />} />
                   </Route>
 
-                  <Route path=":username" element={<Profile />}>
-                      <Route path="posts" element={<Posts />} />
-                      <Route path="with_replies" element={<PostsReplies />} />
-                      <Route path="shares" element={<PostsShares />} />
-                      <Route path="likes" element={<PostsLikes />} />
-                      <Route path="status/:post" element={<Post/>} />
+                  <Route path=":username" element={<Outlet />}>
+                      <Route element={<Profile />}>
+                        <Route index element={<Posts />} />
+                        <Route path="with_replies" element={<PostsReplies />} />
+                        <Route path="shares" element={<PostsShares />} />
+                        <Route path="likes" element={<PostsLikes />} />
+                      </Route>
+                      <Route path="status/:post" element={<Post />} />
                   </Route>
                   
                 </Route>

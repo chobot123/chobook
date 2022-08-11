@@ -46,7 +46,7 @@ const ReplyPost = ({postId, setPosts}) => {
 
     }
 
-    useEffect(() => console.log(content), [content])
+    // useEffect(() => console.log(content), [content])
 
     return (
         <Container className="reply-post p-1 pb-3">
@@ -62,7 +62,7 @@ const ReplyPost = ({postId, setPosts}) => {
                 />
             </div>
             <div className="post-form w-100">
-                <Form onSubmit={(e) => handleSubmit(e)}>
+                <Form onSubmit={() => console.log("sub")}>
                     <Form.Group className="post content">
                         <Form.Control 
                             as="textarea"
@@ -73,7 +73,12 @@ const ReplyPost = ({postId, setPosts}) => {
                         />
                     </Form.Group>
 
-                    <Button className="post submit" variant="primary" type="submit" disabled={(content.length > 0) ? false : true}>Post</Button>
+                    <Button className="post submit" 
+                            type="submit"
+                            disabled={(content.length > 0) ? false : true}
+                    >
+                        Post
+                    </Button>
                 </Form>
             </div>
         </Container>

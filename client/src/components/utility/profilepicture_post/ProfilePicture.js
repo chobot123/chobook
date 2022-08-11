@@ -1,12 +1,19 @@
 import React from "react";
 import { Image } from "react-bootstrap";
 import image from "./placeholder.jpg";
+import "./ProfilePicture.css";
 
-const ProfilePicture = (props) => {
+const ProfilePicture = ({
+    replying,
+    reply
+}) => {
 
     return (
         <div className="profile-picture">
-            <Image src={image} alt="profile picture"  
+            <div className="img-container">
+                <Image 
+                    src={image} 
+                    alt="profile picture"  
                     roundedCircle="true"
                     style={
                         {
@@ -15,6 +22,9 @@ const ProfilePicture = (props) => {
                         }
                     }
                 />
+                {(reply ? <div className="reply link" /> : <></>)}
+                {(replying) ? <div className="replying link" /> : <></>}
+            </div>
         </div>
     )
 }

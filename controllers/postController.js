@@ -219,7 +219,14 @@ exports.post_get = (req, res, next) => {
     .populate("content")
     .populate("likes")
     .populate("replies")
-    .populate("replyTo")
+    .populate("replyChain")
+    .populate({
+        path: "replyTo",
+        populate: {
+            path: "author",
+            model: "User",
+        }
+    })
     .exec((err, thisPost) => {
         if(err){return next(err);}
 
@@ -240,7 +247,7 @@ exports.post_create = [
     body("content").trim().isLength({min: 1}),
 
     async (req, res, next) => {
-
+        console.log("body: " + req.body.replyTo)
         const errors = validationResult(req);
 
         if(!errors.isEmpty()){
@@ -258,27 +265,41 @@ exports.post_create = [
             });
 
             if(req.body.replyTo){
+                let parentPost = await Post.findOne({id: req.body.replyTo}).exec();
+                
+                post.replyTo = parentPost.id;
+                post.replyChain = parentPost.replyChain;
+                post.replyChain.addToSet(parentPost);
 
-                Post.findOneAndUpdate(req.body.parent, {
-                    $addToSet: {replies: post}
-                }, {new: true})
-                .exec((err, result) => {
-                    if(err) {return next(err)}
+                post.save((err, thisPost) => {
+                    if(err) {return next(err);}
 
-                    post.replyChain = result.replyChain;
-                    post.replyChain.push(req.body.parent);
+                    parentPost.replies.addToSet(thisPost);
+                    parentPost.save((err) => {
+                        if(err) {return next(err);}
+                        console.log("post: " + thisPost);
+                        return res.status(200).send(
+                            {
+                                success: true,
+                                post: thisPost,
+                            }
+                        )
+                    });
+                    
                 })
-            }
+            } else {
+                
+                post.save((err, thisPost) => {
+                    if(err) {return next(err);}
+                    return res.status(200).send(
+                        {
+                            success: true,
+                            post: thisPost,
+                        }
+                    )
+                })
 
-            post.save((err, thisPost) => {
-                if(err) {return next(err);}
-                return res.status(200).send(
-                    {
-                        success: true,
-                        post: thisPost,
-                    }
-                )
-            })
+            }
         }
     }
 ]

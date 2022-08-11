@@ -1,0 +1,22 @@
+.profile-picture,
+.img-container {
+    position: relative;
+}
+
+.reply.link {
+    position: absolute;
+    border: 1px solid red;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    height: 100%;
+}
+
+.replying.link {
+    position: absolute;
+    border: 1px solid blue;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    height: 100%;
+}

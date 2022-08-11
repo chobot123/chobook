@@ -9,9 +9,26 @@ const Profile = () => {
 
     const [user, setUser] = useState("");
     const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([]);
     const [selector, setSelector] = useState("posts");
 
     let { username } = useParams();
+
+    const postsActive = () => {
+        setSelector("posts");
+    }
+
+    const repliesActive = () => {
+        setSelector("replies")
+    }
+
+    const sharesActive = () => {
+        setSelector("shares")
+    }
+
+    const likesActive = () => {
+        setSelector("likes")
+    }
 
     useEffect(() => {
 
@@ -41,19 +58,79 @@ const Profile = () => {
         //posts, replies, shares, likes
 
         if(selector === "posts"){
-            
+            fetch("/api/posts/" + username + "/posts", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then((response) => {
+                response.json()
+                    .then((data) => {
+                        if(data.success && data.posts) {
+                            setPosts(data.posts);
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+            .catch(err => console.log(err))
         }
 
         if(selector === "replies"){
-
+            fetch("/api/posts/" + username + "/posts/replies", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then((response) => {
+                response.json()
+                    .then((data) => {
+                        if(data.success && data.posts) {
+                            setPosts(data.posts);
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+            .catch(err => console.log(err))
         }
 
         if(selector === "shares"){
-
+            fetch("/api/posts/" + username + "/posts/shares", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then((response) => {
+                response.json()
+                    .then((data) => {
+                        if(data.success && data.posts) {
+                            setPosts(data.posts);
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+            .catch(err => console.log(err))
         }
 
         if(selector === "likes"){
-
+            fetch("/api/posts/" + username + "/posts/likes", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then((response) => {
+                response.json()
+                    .then((data) => {
+                        if(data.success && data.posts) {
+                            setPosts(data.posts);
+                        }
+                    })
+                    .catch(err => console.log(err))
+            })
+            .catch(err => console.log(err))
         }
 
     }, [selector])
@@ -95,7 +172,69 @@ const Profile = () => {
                     </div>
                 </div>
                 
-                <PostsHandler setSelector={setSelector}/>
+                <div className="PostsHandler w-100">
+                    <Container fluid className="tweets w-100 ">
+                
+                        <Row className="links">
+
+                            <Col>
+                                <NavLink
+                                    to=""
+                                    className={({isActive}) => 
+                                        isActive ? "active" : undefined
+                                    }
+                                    onClick={() => postsActive}
+                                    end
+                                >
+                                    Tweets
+                                </NavLink>
+                            </Col>
+
+                            <Col xs="auto">
+                                <NavLink
+                                    to="with_replies"
+                                    className={({ isActive}) => 
+                                        isActive ? "active" : undefined
+                                    }
+                                    onClick={() => repliesActive}
+                                >
+                                    Tweets & replies
+                                </NavLink>
+                            </Col>
+
+                            <Col>
+                                <NavLink
+                                    to="shares"
+                                    className={({ isActive}) => 
+                                        isActive ? "active" : undefined
+                                    }
+                                    onClick={() => sharesActive}
+                                >
+                                    Shares
+                                </NavLink>
+                            </Col>
+
+                            <Col>
+                                <NavLink
+                                    to="likes"
+                                    className={({ isActive}) => 
+                                        isActive ? "active" : undefined
+                                    }
+                                    onClick={() => likesActive}
+                                >
+                                    Likes
+                                </NavLink>
+                            </Col>        
+
+                        </Row>
+
+                    </Container>
+
+                    <Container fluid className="selected">
+                            <Outlet context={[username, posts, setPosts]}/>
+                    </Container>
+
+                </div>
             </div>
             }
         </Container>

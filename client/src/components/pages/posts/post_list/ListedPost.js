@@ -5,7 +5,7 @@ import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TbBrandHipchat, TbRepeat, TbHeart } from "react-icons/tb";
 import ModalPost from "../post_modal/ModalPost";
 import "./ListedPost.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ListedPost = ({post, setPosts}) => {
 
@@ -31,6 +31,10 @@ const ListedPost = ({post, setPosts}) => {
         e.stopPropagation();
         e.preventDefault();
         setShow(true);
+    }
+
+    const handlePropagation = (e) => {
+        e.stopPropagation();
     }
 
     const handleLike = (e) => {
@@ -125,9 +129,11 @@ const ListedPost = ({post, setPosts}) => {
         .then((response) => {
             response.json()
             .then((data) => {
+
                 if(data.success) {
+                    console.log(data);
                     if(data.post.replyTo) {
-                        setReplyTo(data.post.replyTo);
+                        setReplyTo(data.post.replyTo.author.username);
                     }
 
                     setUsername(data.post.author.username);
@@ -151,17 +157,11 @@ const ListedPost = ({post, setPosts}) => {
             className="ListedPost w-100 p-1 pb-2"
             onClick={(e) => {handleNavigate(e)}}
         >
-            <ProfilePicture />
+            <ProfilePicture 
+                
+            />
             <div className="info w-100">
-                <div className="reply-to"
-                    style={
-                        {
-                            display: (replyTo) ? "block" : "none"
-                        }
-                    }
-                >
-                    Replying to {replyTo}
-                </div>
+
                 <div className="user">
                     <div className="name">
                         {fullName}
@@ -170,6 +170,25 @@ const ListedPost = ({post, setPosts}) => {
                         {"@" + username}
                     </div>
                 </div>
+
+                <div className="reply-to text-muted"
+                    style={
+                        {
+                            display: (replyTo) ? "block" : "none"
+                        }
+                    }
+                >
+                    {"Replying to "}
+
+                    <Link 
+                        to={"/" + replyTo}
+                        onClick={(e) => handlePropagation(e)}
+                    >
+                        @{replyTo}
+                    </Link>
+
+                </div>
+                
                 <div className="content">
                     <div className="text">
                         {content}
@@ -217,6 +236,7 @@ const ListedPost = ({post, setPosts}) => {
                        show={show} 
                        postId={post.id}
                        setPosts={setPosts}
+                       setReplyCount={setReplyCount}
             />
         </Container>
     )

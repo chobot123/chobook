@@ -4,12 +4,17 @@ import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TbBrandHipchat, TbRepeat } from "react-icons/tb";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import image from "./placeholder.jpg";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import ModalPost from "../post_modal/ModalPost";
+import ListedPost from "../post_list/ListedPost";
+import ProfilePicture from "../../../utility/profilepicture_post/ProfilePicture";
 
 const Post = () => {
 
     const [userLiked, setUserLiked] = useState(false);
     const [userShared, setUserShared] = useState(false);
+    const [replies, setReplies] = useState([]);
+    const [replyChain, setReplyChain] = useState([]);
     const [username, setUsername] = useState("");
     const [fullName, setFullName] = useState("");
     const [content, setContent] = useState("");
@@ -17,8 +22,14 @@ const Post = () => {
     const [likeCount, setLikeCount] = useState(0);
     const [replyCount, setReplyCount] = useState(0);
     const [sharesCount, setSharesCount] = useState(0);
+    const [show, setShow] = useState(false);
 
     const postId = useParams().post;
+
+    const openModal = (e) => {
+        e.preventDefault();
+        setShow(true);
+    }
 
     const handleLike = (e) => {
         e.preventDefault();
@@ -100,7 +111,7 @@ const Post = () => {
     }
 
     useEffect(() => {
-        console.log(postId);
+
         fetch("/api/posts/" + postId,
         {
             method: "GET",
@@ -111,9 +122,15 @@ const Post = () => {
         .then((response) => {
             response.json()
                 .then((data) => {
-
+                    console.log(data);
                     const post = data.post;  
+                    if(post.replies){
+                        setReplies(post.replies);
+                    }
 
+                    if(post.replyChain) {
+                        setReplyChain(post.replyChain);
+                    }
                     setUsername(post.author.username);
                     setFullName(post.author.firstName + " " + post.author.lastName);
                     setContent(post.content);
@@ -138,17 +155,20 @@ const Post = () => {
     return (
         <Container fluid>
             <div className="wrapper">
-                <div className="post container">
-                    <div className="post author d-flex align-items-center">
-                        <Image src={image} alt="profile picture"  
-                            roundedCircle="true"
-                            style={
-                                {
-                                    height: "48px",
-                                    width: "48px",
-                                }
-                            }
-                        />
+                <Container fluid className="replyChain">
+                    {(replyChain) ? replyChain.map((reply) => {
+                        return  <div className="w-100"
+                                    key={reply.id}
+                                >
+                                    <ListedPost
+                                        post={reply}
+                                    />
+                                </div>
+                    }) : <></>}
+                </Container>
+                <Container fluid className="post pt-2">
+                    <div className="post author d-flex align-items-center p-1">
+                        <ProfilePicture />
                         <div className="post author-info">
                             <div className="post fullName">{fullName}</div>
                             <div className="post username text-muted"
@@ -178,7 +198,7 @@ const Post = () => {
                     </div>
                     <div className="post react bt bb pt-2 pb-2">
                     <div className="replies">
-                            <div className="replies-wrapper">
+                            <div className="replies-wrapper" onClick={(e) => openModal(e)}>
                                 <div className="icon-wrapper replies">
                                     <TbBrandHipchat />
                                 </div>
@@ -202,20 +222,43 @@ const Post = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="replies-container">
-
-                    </div>
-                    <div className="p-mod">
-                        <Form className="post create">
+                    <Container fluid className="p-mod d-flex w-100 p-1 pb-2 bb">
+                        <ProfilePicture />
+                        <Form className="post create w-100">
+                            <Form.Label className="form-control text-muted reply-to">
+                                {"Replying to "}
+                                <Link
+                                    to={"/" + username}
+                                >
+                                    @{username}
+                                </Link>
+                            </Form.Label>
                             <Form.Group className="post content">
                                 <Form.Control as="textarea" placeholder="Add another Post" />
                             </Form.Group>
 
                             <Button className="post submit" variant="primary" type="submit">Post</Button>
                         </Form>
+                    </Container>
+                    <div className="replies-container">
+                        {(replies) ? replies.map((reply) => {
+                            return <ListedPost
+                                        key={reply.id}
+                                        post={reply}
+                                        setPosts={setReplies}
+                                   />
+                        }) : <></>}
                     </div>
-                </div>
+                </Container>
             </div>
+            <ModalPost fullName={fullName} 
+                       username={username} 
+                       content={content} 
+                       setShow={setShow} 
+                       show={show} 
+                       postId={postId}
+                       setPosts={setReplies}
+            />
         </Container>
     )
 }

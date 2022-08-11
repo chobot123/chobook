@@ -30,6 +30,15 @@ ul {
     flex-wrap: nowrap;
 }
 
+.btn:focus {
+    box-shadow: none !important;
+    background-color: #0d6efd !important;
+}
+
+a {
+    text-decoration: none !important;
+}
+
 .container-fluid>.wrapper {
     display: flex;
     flex-direction: column;
