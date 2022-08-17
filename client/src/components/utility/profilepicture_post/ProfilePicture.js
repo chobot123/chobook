@@ -4,8 +4,9 @@ import image from "./placeholder.jpg";
 import "./ProfilePicture.css";
 
 const ProfilePicture = ({
-    replying,
-    reply
+    isReplying,
+    hasReply,
+    postHeight
 }) => {
 
     return (
@@ -22,8 +23,17 @@ const ProfilePicture = ({
                         }
                     }
                 />
-                {(reply ? <div className="reply link" /> : <></>)}
-                {(replying) ? <div className="replying link" /> : <></>}
+                {(hasReply) ? 
+                    <div className="reply link" 
+                        style={
+                            {
+                                height: postHeight,
+                            }
+                        }
+                    /> 
+                    : <></>
+                }
+                {(isReplying) ? <div className="replying link" /> : <></>}
             </div>
         </div>
     )

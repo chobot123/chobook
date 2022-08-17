@@ -24,7 +24,7 @@
 .modal-container>.wrapper {
     display: flex;
     flex-direction: column;
-    background: rgb(19, 28, 36);
+    background: rgb(19, 28, 36) !important;
 }
 
 .md.fullName {

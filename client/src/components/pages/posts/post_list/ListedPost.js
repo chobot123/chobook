@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Container } from "react-bootstrap";
 import ProfilePicture from "../../../utility/profilepicture_post/ProfilePicture";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { TbBrandHipchat, TbRepeat, TbHeart } from "react-icons/tb";
+import { TbBrandHipchat, TbRepeat } from "react-icons/tb";
 import ModalPost from "../post_modal/ModalPost";
 import "./ListedPost.css";
 import { Link, useNavigate } from "react-router-dom";
 
-const ListedPost = ({post, setPosts}) => {
+const ListedPost = ({
+    post, 
+    setPosts,
+    isReplying,
+    hasReply,
+}) => {
 
     const [userLiked, setUserLiked] = useState(false);
     const [replyTo, setReplyTo] = useState("");
@@ -20,6 +25,12 @@ const ListedPost = ({post, setPosts}) => {
     const [replyCount, setReplyCount] = useState(0);
     const [shareCount, setShareCount] = useState(0);
     const [show, setShow] = useState(false);
+    const [postHeight, setPostHeight] = useState(0);
+
+    const [loading, setLoading] = useState(true);
+
+    const ref = useRef(null);
+    
     const navigate = useNavigate();
 
     const handleNavigate = (e) => {
@@ -119,6 +130,10 @@ const ListedPost = ({post, setPosts}) => {
 
     useEffect(() => {
 
+        let ignore = false;
+
+        setLoading(true);
+
         fetch("/api/posts/" + post.id, 
         {
             method: "GET",
@@ -130,35 +145,55 @@ const ListedPost = ({post, setPosts}) => {
             response.json()
             .then((data) => {
 
-                if(data.success) {
-                    console.log(data);
-                    if(data.post.replyTo) {
-                        setReplyTo(data.post.replyTo.author.username);
+                if(!ignore) {
+                    if(data.success) {  
+                        if(data.post.replyTo) {
+                            setReplyTo(data.post.replyTo.author.username);
+                        }
+
+                        setUsername(data.post.author.username);
+                        setFullName(data.post.author.firstName + " " + data.post.author.lastName);
+                        setContent(data.post.content);
+                        setTimeStamp(data.post.createdAt);
+                        setLikeCount(data.post.numLikes);
+                        setReplyCount(data.post.numReplies);
+                        setShareCount(data.post.numShares);
+                        setUserLiked(data.currentUser.userLiked);
+                        setUserShared(data.currentUser.userShared);
                     }
 
-                    setUsername(data.post.author.username);
-                    setFullName(data.post.author.firstName + " " + data.post.author.lastName);
-                    setContent(data.post.content);
-                    setTimeStamp(data.post.createdAt);
-                    setLikeCount(data.post.numLikes);
-                    setReplyCount(data.post.numReplies);
-                    setShareCount(data.post.numShares);
-                    setUserLiked(data.currentUser.userLiked);
-                    setUserShared(data.currentUser.userShared);
+                    setLoading(false);
                 }
+                
             })
             .catch(err => console.log(err))
         })
         .catch(err => console.log(err))
-    }, [])
+
+        setPostHeight(ref.current.offsetHeight);
+
+        return () => {
+            ignore = true;
+        }
+
+    }, [post])
 
     return (
         <Container fluid 
             className="ListedPost w-100 p-1 pb-2"
             onClick={(e) => {handleNavigate(e)}}
+            ref={ref}
+            style={
+                {
+                    borderBottom:  (hasReply || isReplying) ? "none" : "1px solid rgba(202, 202, 202, 0.15)",
+                    display: (loading) ? "none" : "flex",
+                }
+            }
         >
             <ProfilePicture 
-                
+                isReplying={isReplying}
+                hasReply={hasReply}
+                postHeight={postHeight}
             />
             <div className="info w-100">
 

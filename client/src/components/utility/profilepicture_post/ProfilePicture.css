@@ -3,18 +3,21 @@
     position: relative;
 }
 
+.profile-picture {
+    padding-top: 0.75rem;
+}
+
 .reply.link {
     position: absolute;
-    border: 1px solid red;
+    border-left: 1px solid rgba(202, 202, 202, 0.15);
     top: 100%;
     left: 50%;
     transform: translate(-50%, 0%);
-    height: 100%;
 }
 
 .replying.link {
     position: absolute;
-    border: 1px solid blue;
+    border-left: 1px solid rgba(202, 202, 202, 0.15);
     bottom: 100%;
     left: 50%;
     transform: translate(-50%, 0%);

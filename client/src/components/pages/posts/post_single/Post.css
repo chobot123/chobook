@@ -1,3 +1,6 @@
+.post-single {
+    min-height: 150%;
+}
 
 .post.container-fluid {
     max-width: 600px;

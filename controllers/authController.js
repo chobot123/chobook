@@ -100,6 +100,7 @@ exports.signup = [
 exports.logout = (req, res, next) => {
     req.logOut((err) => {
         if(err) {return next(err);}
+        req.session = null;
         return res.status(200).send(
             {
                 success: true,

@@ -21,7 +21,8 @@ const NavigationBar = (props) => {
             response.json()
                 .then((data) => {
                     if(data.success){
-                        navigate("/login");
+                        props.setLoggedIn(false);
+                        props.setUser("");
                     }
                 })
                 .catch(err => console.log(err))
@@ -55,7 +56,7 @@ const NavigationBar = (props) => {
                     <div className="img-nav"><RiBellFill alt="notifications icon"/></div> 
                     <div  className="navbar-link d-none d-xl-block">Notifications</div>
                 </div>
-                <div className="logout" onClick={() => handleLogout("/logout")}>
+                <div className="logout" onClick={(e) => handleLogout(e)}>
                     <div className="img-nav"><RiDoorOpenFill alt="logout icon"/></div> 
                     <div className="navbar-link d-none d-xl-block">Log Out</div>
                 </div>

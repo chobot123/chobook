@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Post.css";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TbBrandHipchat, TbRepeat } from "react-icons/tb";
-import { Button, Container, Form, Image } from "react-bootstrap";
-import image from "./placeholder.jpg";
-import { Link, useParams } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import ModalPost from "../post_modal/ModalPost";
 import ListedPost from "../post_list/ListedPost";
 import ProfilePicture from "../../../utility/profilepicture_post/ProfilePicture";
+import CreatePost from "../post_create/CreatePost";
 
 const Post = () => {
 
@@ -22,7 +22,10 @@ const Post = () => {
     const [likeCount, setLikeCount] = useState(0);
     const [replyCount, setReplyCount] = useState(0);
     const [sharesCount, setSharesCount] = useState(0);
+    const [showReplyChain, setShowReplyChain] = useState(false);
     const [show, setShow] = useState(false);
+
+    const ref = useRef(null);
 
     const postId = useParams().post;
 
@@ -84,7 +87,7 @@ const Post = () => {
             .then(response => {
                 response.json()
                     .then((data) => {
-                        console.log(data);
+
                         setUserShared(data.currentUser.userShared)
                         setSharesCount(data.post.numShares);
                     }
@@ -101,7 +104,7 @@ const Post = () => {
             .then(response => {
                 response.json()
                     .then((data) => {
-                        console.log(data);
+
                         setUserShared(data.currentUser.userShared)
                         setSharesCount(data.post.numShares);
                     }
@@ -122,7 +125,6 @@ const Post = () => {
         .then((response) => {
             response.json()
                 .then((data) => {
-                    console.log(data);
                     const post = data.post;  
                     if(post.replies){
                         setReplies(post.replies);
@@ -147,28 +149,32 @@ const Post = () => {
                     console.log(err);
                 })
         })
-        .catch((err) => {
-            console.log(err);
-        })
-    }, [])
+        .catch((err) => { console.log(err); })
+
+        // ref.current.scrollIntoView({behavior: "smooth"})
+    }, [postId])
 
     return (
-        <Container fluid>
+        <Container fluid className="post-single">
             <div className="wrapper">
                 <Container fluid className="replyChain">
-                    {(replyChain) ? replyChain.map((reply) => {
+                    {(replyChain) ? replyChain.map((reply, index) => {
                         return  <div className="w-100"
                                     key={reply.id}
                                 >
                                     <ListedPost
                                         post={reply}
+                                        hasReply={true}
+                                        isReplying={(index === 0) ? false : true}
                                     />
                                 </div>
                     }) : <></>}
                 </Container>
-                <Container fluid className="post pt-2">
+                <Container fluid className="post pt-2" ref={ref}>
                     <div className="post author d-flex align-items-center p-1">
-                        <ProfilePicture />
+                        <ProfilePicture 
+                            isReplying={(replyChain.length > 0) ? true : false}
+                        />
                         <div className="post author-info">
                             <div className="post fullName">{fullName}</div>
                             <div className="post username text-muted"
@@ -222,7 +228,7 @@ const Post = () => {
                             </div>
                         </div>
                     </div>
-                    <Container fluid className="p-mod d-flex w-100 p-1 pb-2 bb">
+                    {/* <Container fluid className="p-mod d-flex w-100 p-1 pb-2 bb">
                         <ProfilePicture />
                         <Form className="post create w-100">
                             <Form.Label className="form-control text-muted reply-to">
@@ -239,7 +245,13 @@ const Post = () => {
 
                             <Button className="post submit" variant="primary" type="submit">Post</Button>
                         </Form>
-                    </Container>
+                    </Container> */}
+                    <CreatePost 
+                        postId={postId}
+                        setPosts={setReplies}
+                        setReplyCount={setReplyCount}
+                        replyingTo={username}
+                    />
                     <div className="replies-container">
                         {(replies) ? replies.map((reply) => {
                             return <ListedPost
@@ -258,6 +270,7 @@ const Post = () => {
                        show={show} 
                        postId={postId}
                        setPosts={setReplies}
+                       setReplyCount={setReplyCount}
             />
         </Container>
     )

@@ -3,16 +3,21 @@ import { Button, Container, Form, Image } from "react-bootstrap";
 import image from "./placeholder.jpg";
 import "./CreatePost.css";
 import { TbInfoSquare } from "react-icons/tb";
+import { Link } from "react-router-dom";
+import ProfilePicture from "../../../utility/profilepicture_post/ProfilePicture";
 
 const CreatePost = ({
     postId,
     setPosts,
     setShow,
-    setReplyCount
+    setReplyCount,
+    replyingTo
 }) => {
+
     const [content, setContent] = useState("");
 
     const handleSubmit = (e) => {
+        console.log("post id: " + postId)
         e.preventDefault();
         e.target.reset();
 
@@ -63,20 +68,25 @@ const CreatePost = ({
 
     return (
         <Container className="create-post p-1 pb-3">
-            <div className="profile-pic">
-                <Image src={image} alt="profile picture"  
-                    roundedCircle="true"
-                    style={
-                        {
-                            height: "48px",
-                            width: "48px",
-                        }
-                    }
-                />
-            </div>
+            <ProfilePicture />
             <div className="post-form w-100">
                 <Form onSubmit={(e) => handleSubmit(e)}>
                     <Form.Group className="post content">
+                        <Form.Label 
+                                className="form-control text-muted reply-to"
+                                style={
+                                    {
+                                        display: (replyingTo) ? "block" : "none"
+                                    }
+                                }
+                        >
+                            {"Replying to "}
+                            <Link
+                                to={"/" + replyingTo}
+                            >
+                                @{replyingTo}
+                            </Link>
+                        </Form.Label>
                         <Form.Control 
                             as="textarea"
                             rows="2"

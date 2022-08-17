@@ -247,7 +247,7 @@ exports.post_create = [
     body("content").trim().isLength({min: 1}),
 
     async (req, res, next) => {
-        console.log("body: " + req.body.replyTo)
+
         const errors = validationResult(req);
 
         if(!errors.isEmpty()){
@@ -258,16 +258,19 @@ exports.post_create = [
                 }
             )
         }else {
-
+            console.log("ID: " + req.body.replyTo)
             let post = new Post({
                 author: req.user,
                 content: req.body.content,
             });
 
             if(req.body.replyTo){
-                let parentPost = await Post.findOne({id: req.body.replyTo}).exec();
-                
-                post.replyTo = parentPost.id;
+
+                console.log(req.body.replyTo);
+                let parentPost = await Post.findById(req.body.replyTo).exec();
+                console.log("reply to id: " + req.body.replyTo);
+                console.log("parent post: " + parentPost);
+                post.replyTo = req.body.replyTo;
                 post.replyChain = parentPost.replyChain;
                 post.replyChain.addToSet(parentPost);
 
@@ -277,7 +280,6 @@ exports.post_create = [
                     parentPost.replies.addToSet(thisPost);
                     parentPost.save((err) => {
                         if(err) {return next(err);}
-                        console.log("post: " + thisPost);
                         return res.status(200).send(
                             {
                                 success: true,

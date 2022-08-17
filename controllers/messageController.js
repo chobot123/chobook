@@ -18,17 +18,50 @@ exports.message_create = [
                 }
             )
         }else {
-            
-            let messageData = {
-                author: req.user,
-                content: req.body.content,
-            }
+            //get inbox (params?)
+            //check that user is found in GC
+            //update lastMessage => be this created message
 
-            let inboxData = {
-                users: req.body.users,
-                isGroupChat: (req.body.users.length > 2) ? true : false,
-            }
-            
+            Inbox.findOne({
+                $and: {
+                    _id: req.params.id,
+                    users: {
+                        $in: [req.user]
+                    }
+                }
+            }, (err, inbox) => {
+                if(err) {return next(err);}
+
+                //if the user => inbox and inbox is correct,
+                let message = {
+                    author: req.user, 
+                    content: req.body.content,
+                    inbox: inbox,
+                    seenBy: [
+                        req.user,
+                    ]
+                }
+
+                message.save((err, message) => {
+                    if(err) {return next(err);}
+
+                    inbox.save(
+                        {
+                            lastMessage: message,
+                        },
+                        (err, result) => {
+                            if(err) {return next(err);}
+
+                            return res.status(200).send(
+                                {
+                                    success: true,
+                                    inbox: result,
+                                }
+                            )
+                        }
+                    )
+                })
+            })
         }
     }
 ]
